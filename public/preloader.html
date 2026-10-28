@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Vasu Goyal // Portfolio Boot 2026</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@700;800;900&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Three.js r128 CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #FAF7F2;
+      --ink: #14110F;
+      --muted: #6B665F;
+      --emerald: #0F8A5F;
+      --mint: #2FD49B;
+      --mint-glow: rgba(47, 212, 155, 0.28);
+      --glass-bg: rgba(255, 255, 255, 0.58);
+      --glass-border: rgba(20, 17, 15, 0.08);
+      --card-highlight: rgba(255, 255, 255, 0.85);
+      --ring-track: rgba(20, 17, 15, 0.08);
+      --progress-track: rgba(20, 17, 15, 0.07);
+      --pill-bg: rgba(255, 255, 255, 0.72);
+      --ticker-bg: rgba(20, 17, 15, 0.04);
+      --mx: 50vw;
+      --my: 50vh;
+      --font-display: 'Syne', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0D1210;
+        --ink: #EEF4EF;
+        --muted: #8E9891;
+        --emerald: #2FD49B;
+        --mint: #5FF2BF;
+        --mint-glow: rgba(47, 212, 155, 0.22);
+        --glass-bg: rgba(18, 24, 21, 0.65);
+        --glass-border: rgba(238, 244, 239, 0.1);
+        --card-highlight: rgba(255, 255, 255, 0.12);
+        --ring-track: rgba(238, 244, 239, 0.1);
+        --progress-track: rgba(238, 244, 239, 0.1);
+        --pill-bg: rgba(24, 32, 28, 0.75);
+        --ticker-bg: rgba(238, 244, 239, 0.06);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      background-color: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ==========================================================================
+       LOADER CONTAINER & CLIP-PATH IRIS EXIT
+       ========================================================================== */
+    #loader {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--bg);
+      padding: clamp(16px, 3.5vw, 36px);
+      padding-top: max(clamp(16px, 3.5vw, 36px), env(safe-area-inset-top));
+      padding-bottom: max(clamp(16px, 3.5vw, 36px), env(safe-area-inset-bottom));
+      clip-path: circle(150% at 50% 42%);
+      transition: clip-path 1.2s cubic-bezier(0.76, 0, 0.2, 1);
+      user-select: none;
+      overflow: hidden;
+    }
+
+    #loader.exit-iris {
+      clip-path: circle(0% at 50% 42%);
+    }
+
+    /* Ambient Spotlight & Dotted Grid Layer */
+    .bg-grid-mask {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background-image: radial-gradient(var(--ink) 1.1px, transparent 1.1px);
+      background-size: 24px 24px;
+      opacity: 0.12;
+      mask-image: radial-gradient(circle 260px at var(--mx) var(--my), black 0%, transparent 100%);
+      -webkit-mask-image: radial-gradient(circle 260px at var(--mx) var(--my), black 0%, transparent 100%);
+    }
+
+    /* Soft Mint Radial Glow Following Cursor */
+    .bg-glow-spot {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background: radial-gradient(circle 320px at var(--mx) var(--my), var(--mint-glow), transparent 70%);
+      transition: opacity 0.3s ease;
+    }
+
+    /* Floating Drifting Gradient Blobs */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.42;
+    }
+
+    .blob-1 {
+      top: 15%;
+      left: 12%;
+      width: 380px;
+      height: 380px;
+      background: radial-gradient(circle, var(--mint), transparent 70%);
+      animation: drift1 22s ease-in-out infinite alternate;
+    }
+
+    .blob-2 {
+      bottom: 18%;
+      right: 14%;
+      width: 440px;
+      height: 440px;
+      background: radial-gradient(circle, var(--emerald), transparent 70%);
+      animation: drift2 26s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift1 {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(45px, -35px) scale(1.1); }
+      100% { transform: translate(-35px, 30px) scale(0.92); }
+    }
+
+    @keyframes drift2 {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-50px, 40px) scale(1.12); }
+      100% { transform: translate(40px, -45px) scale(0.94); }
+    }
+
+    /* Noise/Grain Texture Overlay */
+    .bg-noise {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0.055;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    }
+
+    /* ==========================================================================
+       1. TOP BAR
+       ========================================================================== */
+    .top-bar {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 1040px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: var(--pill-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+      font-weight: 500;
+    }
+
+    .ping-box {
+      position: relative;
+      width: 8px;
+      height: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ping-circle {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: var(--emerald);
+      animation: pingDot 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+
+    .dot-core {
+      position: relative;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--emerald);
+    }
+
+    @keyframes pingDot {
+      75%, 100% {
+        transform: scale(2.5);
+        opacity: 0;
+      }
+    }
+
+    .top-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .fps-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--emerald);
+      font-weight: 600;
+    }
+
+    .fps-icon {
+      width: 12px;
+      height: 12px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      animation: pulseIcon 1.8s ease-in-out infinite;
+    }
+
+    @keyframes pulseIcon {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.92); }
+    }
+
+    @media (max-width: 640px) {
+      .top-right { display: none; }
+    }
+
+    /* ==========================================================================
+       2. CENTER STACK & 3D ORB
+       ========================================================================== */
+    .center-stack {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin: auto 0;
+      will-change: transform;
+      transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    /* 3D Orb + SVG Ring Container */
+    .orb-stage {
+      position: relative;
+      width: clamp(210px, 32vw, 260px);
+      height: clamp(210px, 32vw, 260px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 22px;
+      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease;
+    }
+
+    .orb-stage.flash {
+      transform: scale(1.18);
+      filter: drop-shadow(0 0 28px var(--mint));
+    }
+
+    #threeCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100% !important;
+      height: 100% !important;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .ring-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .ring-bg {
+      stroke: var(--ring-track);
+      stroke-width: 2.2;
+      fill: none;
+    }
+
+    .ring-fill {
+      stroke: var(--emerald);
+      stroke-width: 2.6;
+      stroke-linecap: round;
+      fill: none;
+      stroke-dasharray: 289;
+      stroke-dashoffset: 289;
+      transition: stroke-dashoffset 0.08s linear;
+      filter: drop-shadow(0 0 6px var(--mint));
+    }
+
+    .orb-monogram {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .orb-monogram .vg-logo {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(28px, 4.8vw, 38px);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+    }
+
+    .orb-monogram .vg-dot {
+      color: var(--emerald);
+    }
+
+    .orb-monogram .orb-pct {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--emerald);
+      margin-top: 4px;
+    }
+
+    /* Role Subtitle */
+    .role-line {
+      font-family: var(--font-mono);
+      font-size: clamp(10px, 1.4vw, 12px);
+      font-weight: 600;
+      color: var(--emerald);
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    /* Giant Heading "VASU GOYAL" */
+    .name-heading {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(38px, 9.4vw, 118px);
+      line-height: 0.96;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .name-heading.scale-exit {
+      transform: scale(1.04);
+    }
+
+    .word-box {
+      display: inline-flex;
+      white-space: nowrap;
+    }
+
+    .word-spacer {
+      display: inline-block;
+      width: clamp(10px, 2.5vw, 28px);
+    }
+
+    .letter-mask {
+      display: inline-block;
+      overflow: hidden;
+      vertical-align: bottom;
+      padding-top: 4px;
+      padding-bottom: 6px;
+    }
+
+    .letter-inner {
+      display: inline-block;
+      transform: translateY(115%);
+      transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), color 0.15s ease;
+      color: var(--ink);
+    }
+
+    .letter-inner.revealed {
+      transform: translateY(0%);
+    }
+
+    .letter-inner.scrambling {
+      color: var(--emerald);
+    }
+
+    /* Tagline */
+    .tagline {
+      max-width: 480px;
+      font-size: clamp(12px, 1.5vw, 14px);
+      line-height: 1.55;
+      color: var(--muted);
+      margin-top: 14px;
+      padding: 0 16px;
+    }
+
+    /* Tech Keyword Ticker */
+    .ticker-wrapper {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .ticker-label {
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .ticker-viewport {
+      height: 22px;
+      overflow: hidden;
+      padding: 0 10px;
+      border-radius: 6px;
+      background: var(--ticker-bg);
+      border: 1px solid var(--glass-border);
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .ticker-track {
+      display: flex;
+      flex-direction: column;
+      animation: tickerRoll 8s steps(4) infinite;
+    }
+
+    .ticker-item {
+      height: 22px;
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      color: var(--emerald);
+      letter-spacing: 0.12em;
+    }
+
+    @keyframes tickerRoll {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-88px); }
+    }
+
+    /* ==========================================================================
+       3. BOTTOM LIQUID-GLASS CARD
+       ========================================================================== */
+    .bottom-card-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .liquid-card {
+      position: relative;
+      border-radius: 26px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(18px) saturate(1.4);
+      -webkit-backdrop-filter: blur(18px) saturate(1.4);
+      padding: clamp(16px, 3vw, 24px);
+      box-shadow: 
+        0 20px 45px -10px rgba(0, 0, 0, 0.06),
+        inset 0 1px 1px var(--card-highlight);
+    }
+
+    /* Gradient border with mask composite */
+    .liquid-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 26px;
+      padding: 1px;
+      background: linear-gradient(135deg, var(--emerald) 0%, transparent 48%, var(--mint) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    /* 3-line Typewriter Terminal Log */
+    .terminal-feed {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.6;
+      color: var(--muted);
+      height: 52px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      margin-bottom: 14px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .log-line {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      opacity: 0.75;
+    }
+
+    .log-line.active {
+      color: var(--ink);
+      font-weight: 500;
+      opacity: 1;
+    }
+
+    .term-cursor {
+      display: inline-block;
+      width: 7px;
+      height: 12px;
+      background: var(--emerald);
+      vertical-align: middle;
+      margin-left: 3px;
+      animation: blinkCursor 0.85s step-start infinite;
+    }
+
+    @keyframes blinkCursor {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* Status Label & Counter Row */
+    .status-counter-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .status-label {
+      color: var(--ink);
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 70%;
+    }
+
+    .counter-display {
+      color: var(--emerald);
+      letter-spacing: 0.08em;
+    }
+
+    .counter-display .total-100 {
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    /* Progress Bar with Shimmer */
+    .progress-bar-track {
+      position: relative;
+      width: 100%;
+      height: 7px;
+      border-radius: 9999px;
+      background: var(--progress-track);
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .progress-bar-fill {
+      position: relative;
+      height: 100%;
+      width: 0%;
+      border-radius: 9999px;
+      background: linear-gradient(90deg, var(--emerald) 0%, var(--mint) 100%);
+      transition: width 0.06s linear;
+    }
+
+    .progress-bar-fill::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.75) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmerSweep 1.8s infinite linear;
+    }
+
+    @keyframes shimmerSweep {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(200%); }
+    }
+
+    /* Four Stage Labels */
+    .stage-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+
+    .stage-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      transition: color 0.25s ease, font-weight 0.25s ease;
+    }
+
+    .stage-item.reached {
+      color: var(--emerald);
+      font-weight: 600;
+    }
+
+    .stage-check {
+      display: inline-block;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .stage-item.reached .stage-check {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* ==========================================================================
+       MAIN PORTFOLIO HERO UNDERNEATH
+       ========================================================================== */
+    #mainWebsite {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 24px;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #mainWebsite.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .site-hero-title {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(34px, 6vw, 68px);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .site-hero-desc {
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .btn-replay {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 12px 24px;
+      border-radius: 9999px;
+      background: var(--ink);
+      color: var(--bg);
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .btn-replay:hover {
+      transform: scale(1.05);
+      opacity: 0.92;
+    }
+
+    .btn-replay:focus-visible {
+      outline: 2px solid var(--emerald);
+      outline-offset: 4px;
+    }
+
+    /* ==========================================================================
+       PREFERS-REDUCED-MOTION OVERRIDES
+       ========================================================================== */
+    @media (prefers-reduced-motion: reduce) {
+      .blob-1, .blob-2,
+      .ring-fill::after,
+      .ping-circle,
+      .fps-icon,
+      .ticker-track,
+      .progress-bar-fill::after {
+        animation: none !important;
+      }
+      .letter-inner {
+        transform: translateY(0) !important;
+        transition: none !important;
+      }
+      .center-stack {
+        transform: none !important;
+        transition: none !important;
+      }
+      #loader {
+        transition: opacity 0.6s ease !important;
+        clip-path: none !important;
+      }
+      #loader.exit-iris {
+        opacity: 0 !important;
+        pointer-events: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       BOOT PRELOADER
+       ========================================================================== -->
+  <section id="loader" aria-label="Portfolio Boot Sequence">
+    <!-- Ambient Layers -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="bg-grid-mask"></div>
+    <div class="bg-glow-spot"></div>
+    <div class="bg-noise"></div>
+
+    <!-- 1. TOP BAR -->
+    <header class="top-bar">
+      <div class="status-pill">
+        <div class="ping-box">
+          <div class="ping-circle"></div>
+          <div class="dot-core"></div>
+        </div>
+        <span>PORTFOLIO BOOT // 2026 EDITION</span>
+      </div>
+
+      <div class="top-right">
+        <span>DELHI NCR // 28.6139° N</span>
+        <span>•</span>
+        <div class="fps-badge">
+          <svg class="fps-icon" viewBox="0 0 24 24" fill="none">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span>60 FPS ACTIVE</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- 2. CENTER STACK -->
+    <main class="center-stack" id="centerStack">
+      <!-- 3D Orb + Progress Ring + Monogram -->
+      <div class="orb-stage" id="orbStage">
+        <!-- Three.js Canvas -->
+        <canvas id="threeCanvas"></canvas>
+
+        <!-- SVG Progress Ring -->
+        <svg class="ring-svg" viewBox="0 0 100 100">
+          <circle class="ring-bg" cx="50" cy="50" r="46" />
+          <circle class="ring-fill" id="ringFill" cx="50" cy="50" r="46" />
+        </svg>
+
+        <!-- Monogram & Percent -->
+        <div class="orb-monogram">
+          <div class="vg-logo">VG<span class="vg-dot">.</span></div>
+          <div class="orb-pct" id="orbPct">0%</div>
+        </div>
+      </div>
+
+      <!-- Role Line -->
+      <div class="role-line">FULL-STACK SOFTWARE ENGINEER &amp; WEB ARCHITECT</div>
+
+      <!-- Masked Heading "VASU GOYAL" -->
+      <h1 class="name-heading" id="nameHeading" aria-label="Vasu Goyal">
+        <!-- Rendered via JS for masked scramble -->
+      </h1>
+
+      <!-- Tagline -->
+      <p class="tagline">
+        Crafting high-throughput enterprise portals, liquid-glass aesthetics, and resilient web ecosystems.
+      </p>
+
+      <!-- Vertical Tech Ticker -->
+      <div class="ticker-wrapper">
+        <span class="ticker-label">CORE //</span>
+        <div class="ticker-viewport">
+          <div class="ticker-track">
+            <div class="ticker-item">REACT</div>
+            <div class="ticker-item">NEXT.JS</div>
+            <div class="ticker-item">NODE</div>
+            <div class="ticker-item">TYPESCRIPT</div>
+            <!-- Loop back item for smooth transition -->
+            <div class="ticker-item">REACT</div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 3. BOTTOM LIQUID-GLASS CARD -->
+    <footer class="bottom-card-container">
+      <div class="liquid-card">
+        <!-- Terminal Log Feed (3 visible lines) -->
+        <div class="terminal-feed" id="terminalFeed">
+          <div class="log-line" id="logLine0">&gt; booting kernel...</div>
+          <div class="log-line" id="logLine1">&gt; checking display pipelines...</div>
+          <div class="log-line active" id="logLine2">
+            <span id="activeLogText">&gt; initializing design system...</span><span class="term-cursor"></span>
+          </div>
+        </div>
+
+        <!-- Status & Live Counter -->
+        <div class="status-counter-row">
+          <div class="status-label" id="statusLabel">INITIALIZING DESIGN SYSTEM...</div>
+          <div class="counter-display">
+            <span id="counterNum">0</span> <span class="total-100">/ 100</span>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+
+        <!-- Stage Milestones -->
+        <div class="stage-row">
+          <div class="stage-item" id="stageBoot">
+            <span class="stage-check">✓</span> <span>BOOT // 00</span>
+          </div>
+          <div class="stage-item" id="stageCompiled">
+            <span class="stage-check">✓</span> <span>COMPILED // 45</span>
+          </div>
+          <div class="stage-item" id="stageHydrated">
+            <span class="stage-check">✓</span> <span>HYDRATED // 80</span>
+          </div>
+          <div class="stage-item" id="stageReady">
+            <span class="stage-check">✓</span> <span>READY // 100</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </section>
+
+  <!-- ==========================================================================
+       MAIN WEBSITE (HERO UNDERNEATH)
+       ========================================================================== -->
+  <main id="mainWebsite">
+    <h1 class="site-hero-title">Welcome to my work.</h1>
+    <p class="site-hero-desc">
+      Architecting high-performance digital products, responsive web apps, and design engineering systems.
+    </p>
+    <button class="btn-replay" id="btnReplay" type="button">Replay loader</button>
+  </main>
+
+  <!-- ==========================================================================
+       VANILLA JAVASCRIPT & THREE.JS LOGIC
+       ========================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      // Feature Check & Preferences
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // DOM Elements
+      const loader = document.getElementById('loader');
+      const centerStack = document.getElementById('centerStack');
+      const orbStage = document.getElementById('orbStage');
+      const nameHeading = document.getElementById('nameHeading');
+      const ringFill = document.getElementById('ringFill');
+      const orbPct = document.getElementById('orbPct');
+      const progressFill = document.getElementById('progressFill');
+      const counterNum = document.getElementById('counterNum');
+      const statusLabel = document.getElementById('statusLabel');
+      const activeLogText = document.getElementById('activeLogText');
+      const logLine0 = document.getElementById('logLine0');
+      const logLine1 = document.getElementById('logLine1');
+      const stageBoot = document.getElementById('stageBoot');
+      const stageCompiled = document.getElementById('stageCompiled');
+      const stageHydrated = document.getElementById('stageHydrated');
+      const stageReady = document.getElementById('stageReady');
+      const mainWebsite = document.getElementById('mainWebsite');
+      const btnReplay = document.getElementById('btnReplay');
+
+      // Letters Setup: "VASU GOYAL"
+      const fullName = "VASU GOYAL";
+      const scrambleChars = "01<>/{}#$%&";
+      const letterElements = [];
+
+      function buildHeading() {
+        nameHeading.innerHTML = '';
+        letterElements.length = 0;
+        const words = fullName.split(' ');
+
+        words.forEach((word, wIdx) => {
+          const wordBox = document.createElement('span');
+          wordBox.className = 'word-box';
+
+          for (let i = 0; i < word.length; i++) {
+            const char = word[i];
+            const mask = document.createElement('span');
+            mask.className = 'letter-mask';
+
+            const inner = document.createElement('span');
+            inner.className = 'letter-inner';
+            inner.textContent = char;
+
+            mask.appendChild(inner);
+            wordBox.appendChild(mask);
+
+            letterElements.push({
+              dom: inner,
+              targetChar: char,
+              resolved: false,
+              index: letterElements.length
+            });
+          }
+
+          nameHeading.appendChild(wordBox);
+
+          if (wIdx < words.length - 1) {
+            const spacer = document.createElement('span');
+            spacer.className = 'word-spacer';
+            nameHeading.appendChild(spacer);
+          }
+        });
+      }
+
+      buildHeading();
+
+      // Masked slide-up reveal (staggered 45ms)
+      function revealLetters() {
+        letterElements.forEach((item, idx) => {
+          setTimeout(() => {
+            item.dom.classList.add('revealed');
+          }, 120 + idx * 45);
+        });
+      }
+
+      // ========================================================================
+      // THREE.JS 3D ORB SCENE
+      // ========================================================================
+      let scene, camera, renderer, orbGroup, coreMesh, coreLines, outerMesh;
+      let rings = [], orbitDots = [], particles;
+      let canvas = document.getElementById('threeCanvas');
+
+      function initThree() {
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+        camera.position.z = 8.5;
+
+        renderer = new THREE.WebGLRenderer({
+          canvas: canvas,
+          alpha: true,
+          antialias: true
+        });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        const updateSize = () => {
+          const rect = orbStage.getBoundingClientRect();
+          const size = rect.width || 260;
+          renderer.setSize(size, size, false);
+          camera.aspect = 1;
+          camera.updateProjectionMatrix();
+        };
+        updateSize();
+        window.addEventListener('resize', updateSize);
+
+        // Group container
+        orbGroup = new THREE.Group();
+        scene.add(orbGroup);
+
+        // Lights
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+        scene.add(ambientLight);
+
+        const dirLight = new THREE.DirectionalLight(0x2fd49b, 1.2);
+        dirLight.position.set(5, 8, 6);
+        scene.add(dirLight);
+
+        // Core: IcosahedronGeometry(1.5, 1) with faint mint flat-shaded material + green EdgesGeometry
+        const coreGeo = new THREE.IcosahedronGeometry(1.5, 1);
+        const coreMat = new THREE.MeshLambertMaterial({
+          color: 0x2fd49b,
+          transparent: true,
+          opacity: 0.16,
+          flatShading: true
+        });
+        coreMesh = new THREE.Mesh(coreGeo, coreMat);
+        orbGroup.add(coreMesh);
+
+        const edgesGeo = new THREE.EdgesGeometry(coreGeo);
+        const edgesMat = new THREE.LineBasicMaterial({
+          color: 0x0f8a5f,
+          transparent: true,
+          opacity: 0.85,
+          linewidth: 1.5
+        });
+        coreLines = new THREE.LineSegments(edgesGeo, edgesMat);
+        coreMesh.add(coreLines);
+
+        // Outer shell: IcosahedronGeometry(2.05, 2) wireframe
+        const outerGeo = new THREE.IcosahedronGeometry(2.05, 2);
+        const outerMat = new THREE.MeshBasicMaterial({
+          color: 0x0f8a5f,
+          wireframe: true,
+          transparent: true,
+          opacity: 0.12
+        });
+        outerMesh = new THREE.Mesh(outerGeo, outerMat);
+        orbGroup.add(outerMesh);
+
+        // 3 Tilted Torus Rings + Orbiting Dots
+        const ringConfigs = [
+          { r: 2.55, tube: 0.016, rot: [0.65, 0.35, 0.2], speed: 1.4 },
+          { r: 2.80, tube: 0.016, rot: [-0.5, 0.8, -0.4], speed: 1.9 },
+          { r: 3.05, tube: 0.016, rot: [0.3, -0.7, 0.9], speed: 2.3 }
+        ];
+
+        ringConfigs.forEach((cfg) => {
+          const ringGeo = new THREE.TorusGeometry(cfg.r, cfg.tube, 16, 80);
+          const ringMat = new THREE.MeshBasicMaterial({
+            color: 0x0f8a5f,
+            transparent: true,
+            opacity: 0.22
+          });
+          const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+          ringMesh.rotation.set(...cfg.rot);
+          orbGroup.add(ringMesh);
+
+          // Glowing mint orbiting dot
+          const dotGeo = new THREE.SphereGeometry(0.09, 12, 12);
+          const dotMat = new THREE.MeshBasicMaterial({
+            color: 0x2fd49b,
+            transparent: true,
+            opacity: 0.95
+          });
+          const dotMesh = new THREE.Mesh(dotGeo, dotMat);
+          ringMesh.add(dotMesh);
+
+          rings.push(ringMesh);
+          orbitDots.push({
+            mesh: dotMesh,
+            radius: cfg.r,
+            speed: cfg.speed,
+            angle: Math.random() * Math.PI * 2
+          });
+        });
+
+        // ~260 Floating Green Particles on a Sphere Shell (r: 3.2 to 4.4)
+        const particleCount = 260;
+        const pGeo = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+
+        for (let i = 0; i < particleCount; i++) {
+          const radius = 3.2 + Math.random() * 1.2;
+          const theta = Math.acos(2 * Math.random() - 1);
+          const phi = Math.random() * Math.PI * 2;
+
+          positions[i * 3] = radius * Math.sin(theta) * Math.cos(phi);
+          positions[i * 3 + 1] = radius * Math.sin(theta) * Math.sin(phi);
+          positions[i * 3 + 2] = radius * Math.cos(theta);
+        }
+
+        pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        const pMat = new THREE.PointsMaterial({
+          color: 0x2fd49b,
+          size: 0.045,
+          transparent: true,
+          opacity: 0.65
+        });
+        particles = new THREE.Points(pGeo, pMat);
+        orbGroup.add(particles);
+      }
+
+      initThree();
+
+      // ========================================================================
+      // MOUSE PARALLAX & SPOTLIGHT TRACKING
+      // ========================================================================
+      let mouseX = 0, mouseY = 0;
+      let targetTiltX = 0, targetTiltY = 0;
+      let currentTiltX = 0, currentTiltY = 0;
+      let targetParallaxX = 0, targetParallaxY = 0;
+      let currentParallaxX = 0, currentParallaxY = 0;
+
+      window.addEventListener('mousemove', (e) => {
+        const { clientX, clientY } = e;
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+
+        document.documentElement.style.setProperty('--mx', `${clientX}px`);
+        document.documentElement.style.setProperty('--my', `${clientY}px`);
+
+        // Normalized offsets (-1 to 1)
+        const nx = (clientX - w / 2) / (w / 2);
+        const ny = (clientY - h / 2) / (h / 2);
+
+        // 3D Orb tilt target
+        targetTiltX = ny * 0.35;
+        targetTiltY = nx * 0.35;
+
+        // Center stack subtle parallax (8-10px opposite to cursor)
+        targetParallaxX = -nx * 9;
+        targetParallaxY = -ny * 9;
+      });
+
+      // ========================================================================
+      // BOOT SEQUENCE & LOGIC
+      // ========================================================================
+      const BOOT_LOGS = [
+        { pct: 0, msg: "> initializing design system..." },
+        { pct: 18, msg: "> compiling liquid glass refractions..." },
+        { pct: 45, msg: "> hydrating components..." },
+        { pct: 70, msg: "> mounting 3d scene..." },
+        { pct: 92, msg: "> optimizing 60 fps..." },
+        { pct: 100, msg: "> ready." }
+      ];
+
+      let progress = 0;
+      let startTime = null;
+      const totalDuration = 6200; // 6.2s duration
+      let currentLogIdx = 0;
+      let isBooting = false;
+      let isExited = false;
+
+      // Update terminal feed lines
+      function updateTerminal(msg) {
+        if (activeLogText.textContent === msg) return;
+        logLine0.textContent = logLine1.textContent;
+        logLine1.textContent = activeLogText.textContent;
+        activeLogText.textContent = msg;
+        statusLabel.textContent = msg.replace(/^>\s*/, '').toUpperCase();
+      }
+
+      // Drive UI metrics from progress
+      function updateProgressUI(pct) {
+        // SVG Ring: stroke-dashoffset from 289 to 0
+        const offset = 289 - (pct / 100) * 289;
+        ringFill.style.strokeDashoffset = offset;
+
+        // Numeric counters
+        const intPct = Math.floor(pct);
+        orbPct.textContent = `${intPct}%`;
+        counterNum.textContent = intPct;
+        progressFill.style.width = `${pct}%`;
+
+        // Milestone Stages Checkmarks
+        if (pct >= 0) stageBoot.classList.add('reached');
+        if (pct >= 45) stageCompiled.classList.add('reached');
+        if (pct >= 80) stageHydrated.classList.add('reached');
+        if (pct >= 100) stageReady.classList.add('reached');
+
+        // Terminal Log progression
+        for (let i = BOOT_LOGS.length - 1; i >= 0; i--) {
+          if (pct >= BOOT_LOGS[i].pct) {
+            if (currentLogIdx !== i) {
+              currentLogIdx = i;
+              updateTerminal(BOOT_LOGS[i].msg);
+            }
+            break;
+          }
+        }
+
+        // Letter Scramble/Decode effect
+        const totalLetters = letterElements.length;
+        letterElements.forEach((item) => {
+          const resolveThreshold = ((item.index + 1) / totalLetters) * 88;
+          if (pct >= resolveThreshold) {
+            if (!item.resolved) {
+              item.dom.textContent = item.targetChar;
+              item.dom.classList.remove('scrambling');
+              item.resolved = true;
+            }
+          } else {
+            if (!prefersReducedMotion && pct > 0) {
+              item.dom.classList.add('scrambling');
+              const rand = scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
+              item.dom.textContent = rand;
+            }
+          }
+        });
+      }
+
+      // Exit Transition Choreography
+      function triggerExit() {
+        if (isExited) return;
+        isExited = true;
+
+        // 1. Orb flashes (scale 1.18 + glow), Name scales to 1.04
+        orbStage.classList.add('flash');
+        nameHeading.classList.add('scale-exit');
+
+        // 2. After 900ms, close with clip-path iris
+        setTimeout(() => {
+          loader.classList.add('exit-iris');
+
+          // 3. Reveal Main Website
+          setTimeout(() => {
+            mainWebsite.classList.add('revealed');
+          }, 450);
+        }, 900);
+      }
+
+      // Main RequestAnimationFrame Loop (60FPS)
+      let lastTime = 0;
+      function animate(timestamp) {
+        if (!startTime && isBooting) startTime = timestamp;
+
+        if (isBooting && !isExited) {
+          const elapsed = timestamp - startTime;
+          const t = Math.min(1, elapsed / totalDuration);
+
+          // Ease-in-out curve
+          const easeProgress = t < 0.5
+            ? 2 * t * t
+            : 1 - Math.pow(-2 * t + 2, 2) / 2;
+
+          progress = easeProgress * 100;
+          updateProgressUI(progress);
+
+          if (t >= 1) {
+            updateProgressUI(100);
+            triggerExit();
+          }
+        }
+
+        // Three.js Orb Animation
+        if (!prefersReducedMotion) {
+          // Dynamic rotation speed increases as progress grows
+          const speedMultiplier = 1 + (progress / 100) * 2.8;
+          orbGroup.rotation.y += 0.005 * speedMultiplier;
+          orbGroup.rotation.x += 0.002 * speedMultiplier;
+
+          // Core scales from 70% to 100% with progress
+          const coreScale = 0.7 + (progress / 100) * 0.3;
+          coreMesh.scale.set(coreScale, coreScale, coreScale);
+
+          // Orbiting dots on tilted rings
+          orbitDots.forEach((dot) => {
+            dot.angle += 0.012 * dot.speed * speedMultiplier;
+            dot.mesh.position.x = Math.cos(dot.angle) * dot.radius;
+            dot.mesh.position.y = Math.sin(dot.angle) * dot.radius;
+          });
+
+          // Particles subtle float
+          if (particles) particles.rotation.y -= 0.0015;
+
+          // Mouse tilt lerp
+          currentTiltX += (targetTiltX - currentTiltX) * 0.06;
+          currentTiltY += (targetTiltY - currentTiltY) * 0.06;
+          orbGroup.rotation.x += currentTiltX * 0.04;
+          orbGroup.rotation.z += currentTiltY * 0.04;
+
+          // Mouse Parallax on center stack
+          currentParallaxX += (targetParallaxX - currentParallaxX) * 0.08;
+          currentParallaxY += (targetParallaxY - currentParallaxY) * 0.08;
+          centerStack.style.transform = `translate3d(${currentParallaxX}px, ${currentParallaxY}px, 0)`;
+        }
+
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+      }
+
+      // Boot Initiation Sequence
+      function startSequence() {
+        // Reset states
+        progress = 0;
+        startTime = null;
+        isBooting = false;
+        isExited = false;
+        currentLogIdx = 0;
+
+        loader.classList.remove('exit-iris');
+        orbStage.classList.remove('flash');
+        nameHeading.classList.remove('scale-exit');
+        mainWebsite.classList.remove('revealed');
+
+        stageBoot.classList.remove('reached');
+        stageCompiled.classList.remove('reached');
+        stageHydrated.classList.remove('reached');
+        stageReady.classList.remove('reached');
+
+        buildHeading();
+        updateProgressUI(0);
+        revealLetters();
+
+        // Starts 500ms after the letters reveal
+        setTimeout(() => {
+          isBooting = true;
+        }, 500);
+      }
+
+      // Start on load
+      window.addEventListener('DOMContentLoaded', () => {
+        startSequence();
+        requestAnimationFrame(animate);
+      });
+
+      // Replay Button Action
+      btnReplay.addEventListener('click', () => {
+        startSequence();
+      });
+
+    })();
+  </script>
+</body>
+</html>

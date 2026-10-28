@@ -56,14 +56,14 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-8 pt-16 sm:pt-24 pb-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-8 pt-12 sm:pt-16 pb-10">
         {/* Main Footer Row */}
-        <div className={`grid grid-cols-1 md:grid-cols-12 gap-12 pb-16 border-b ${
+        <div className={`grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b ${
           isCream ? 'border-black/[0.08]' : 'border-white/[0.08]'
         }`}>
           {/* Col 1: Bio & Mission */}
-          <div className="md:col-span-5 space-y-4">
-            <span className={`font-display font-extrabold text-2xl sm:text-3xl tracking-tight flex items-center gap-1.5 ${
+          <div className="md:col-span-5 space-y-3">
+            <span className={`font-display font-extrabold text-xl sm:text-2xl tracking-tight flex items-center gap-1.5 ${
               isCream ? 'text-[#0F172A]' : 'text-white'
             }`}>
               <span>VASU GOYAL</span>
@@ -74,12 +74,12 @@ export default function Footer() {
             }`}>
               Full-Stack Software Developer dedicated to engineering resilient, scalable web portals and high-impact digital experiences.
             </p>
-            <div className="pt-2">
-              <span className={`inline-flex items-center gap-2 text-xs font-heading uppercase tracking-wider ${
+            <div className="pt-1">
+              <span className={`inline-flex items-center gap-2 text-[11px] font-heading uppercase tracking-wider ${
                 isCream ? 'text-[#64748B]' : 'text-[#71717A]'
               }`}>
-                <span className={`w-2 h-2 rounded-full ${isCream ? 'bg-[#15803D]' : 'bg-[#C6FF3D]'}`} />
-                Based in India // Available Worldwide
+                <span className={`w-1.5 h-1.5 rounded-full ${isCream ? 'bg-[#15803D]' : 'bg-[#C6FF3D]'}`} />
+                Delhi NCR // Available Worldwide
               </span>
             </div>
           </div>
@@ -181,24 +181,6 @@ export default function Footer() {
               </MagneticButton>
             </div>
           </div>
-        </div>
-
-        {/* 2. Massive "VASU GOYAL" Parallax Wordmark */}
-        <div className={`py-8 sm:py-14 overflow-hidden border-b text-center ${
-          isCream ? 'border-black/[0.08]' : 'border-white/[0.08]'
-        }`}>
-          <motion.h2
-            initial={{ opacity: 0.2 }}
-            whileInView={{ opacity: 0.9 }}
-            viewport={{ once: true }}
-            className={`font-display font-black text-[clamp(2.5rem,11vw,11rem)] leading-none text-transparent bg-clip-text uppercase tracking-tighter select-none ${
-              isCream
-                ? 'bg-gradient-to-b from-slate-900 via-slate-600/60 to-slate-400/20'
-                : 'bg-gradient-to-b from-white/90 via-white/40 to-white/5'
-            }`}
-          >
-            VASU GOYAL
-          </motion.h2>
         </div>
 
         {/* Bottom Copyright & Tech Stack Credits */}

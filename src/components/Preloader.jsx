@@ -1,271 +1,419 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Activity, Shield, Terminal, Zap } from 'lucide-react';
-import { useTheme } from '../context/ThemeContext';
+import { useState, useEffect, useRef } from 'react';
+import * as THREE from 'three';
+
+const TEXT = 'VASU GOYAL';
+const POOL = '01<>/{}#$%&';
+const LOGS = [
+  [0, '> initializing design system...'],
+  [18, '> compiling liquid glass refractions...'],
+  [45, '> hydrating components...'],
+  [70, '> mounting 3d scene...'],
+  [92, '> optimizing 60 fps...'],
+  [100, '> ready.'],
+];
 
 export default function Preloader({ onComplete }) {
-  const [count, setCount] = useState(0);
   const [isDone, setIsDone] = useState(false);
-  const { isCream } = useTheme();
+  const [isOut, setIsOut] = useState(false);
 
-  const words = ["VASU", "GOYAL"];
+  const containerRef = useRef(null);
+  const stageRef = useRef(null);
+  const orbRef = useRef(null);
+  const nameRef = useRef(null);
+  const ringRef = useRef(null);
+  const pcRef = useRef(null);
+  const numRef = useRef(null);
+  const fillRef = useRef(null);
+  const logRef = useRef(null);
+  const lblRef = useRef(null);
+  const stRef = useRef(null);
 
   useEffect(() => {
-    const duration = 2000;
-    const stepTime = 25;
-    const steps = duration / stepTime;
-    let currentStep = 0;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let P = 0;
+    let running = false;
+    let t0 = 0;
+    let done = false;
+    let lastLog = -1;
+    let animId = null;
 
-    const interval = setInterval(() => {
-      currentStep++;
-      const progress = currentStep / steps;
-      const easedProgress = Math.min(1, Math.pow(progress, 1.8));
-      const currentVal = Math.min(100, Math.round(easedProgress * 100));
-      setCount(currentVal);
+    // 1. Build name letters with masked slide-up
+    const nameEl = nameRef.current;
+    if (nameEl) {
+      nameEl.innerHTML = TEXT.split('')
+        .map((ch) =>
+          ch === ' '
+            ? '<span class="loader-m loader-sp"></span>'
+            : '<span class="loader-m"><span class="loader-c">' + ch + '</span></span>'
+        )
+        .join('');
+    }
+    const cs = nameEl ? Array.from(nameEl.querySelectorAll('.loader-c')) : [];
 
-      if (currentStep >= steps) {
-        clearInterval(interval);
-        setCount(100);
+    function reveal() {
+      cs.forEach((c, i) => {
+        c.style.transitionDelay = i * 45 + 'ms';
+      });
+      requestAnimationFrame(() => {
+        if (nameEl) nameEl.classList.add('in');
+      });
+    }
+
+    function scramble() {
+      const n = cs.length;
+      cs.forEach((c, i) => {
+        const real = TEXT.replace(/ /g, '')[i];
+        const th = ((i + 1) / n) * 88;
+        if (P >= th || reduce) {
+          c.textContent = real;
+          c.classList.remove('scr');
+        } else {
+          c.textContent = POOL[(Math.random() * POOL.length) | 0];
+          c.classList.add('scr');
+        }
+      });
+    }
+
+    // 2. Three.js Orb with transparent background
+    const orb = orbRef.current;
+    const G = 0x0f8a5f;
+    const R = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    R.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    R.setSize(260, 260);
+
+    // Prepend canvas inside orb container behind badge
+    if (orb) {
+      orb.prepend(R.domElement);
+    }
+
+    const S = new THREE.Scene();
+    const cam = new THREE.PerspectiveCamera(40, 1, 0.1, 50);
+    cam.position.z = 7;
+    S.add(new THREE.AmbientLight(0xffffff, 0.9));
+    const dl = new THREE.DirectionalLight(0xffffff, 0.9);
+    dl.position.set(3, 4, 5);
+    S.add(dl);
+
+    const grp = new THREE.Group();
+    S.add(grp);
+
+    const geo = new THREE.IcosahedronGeometry(1.5, 1);
+    const core = new THREE.Mesh(
+      geo,
+      new THREE.MeshStandardMaterial({
+        color: 0x2fd49b,
+        flatShading: true,
+        transparent: true,
+        opacity: 0.16,
+        metalness: 0.2,
+        roughness: 0.3,
+      })
+    );
+    const edges = new THREE.LineSegments(
+      new THREE.EdgesGeometry(geo),
+      new THREE.LineBasicMaterial({ color: G, transparent: true, opacity: 0.75 })
+    );
+    const shell = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(2.05, 2),
+      new THREE.MeshBasicMaterial({ color: G, wireframe: true, transparent: true, opacity: 0.12 })
+    );
+    grp.add(core, edges, shell);
+
+    const rings = [];
+    const dots = [];
+    [
+      [2.55, 0.5, 0],
+      [2.8, 1.2, 0.9],
+      [3.05, -0.7, 1.9],
+    ].forEach((r, i) => {
+      const pv = new THREE.Group();
+      pv.rotation.set(r[1], r[2], 0);
+      pv.add(
+        new THREE.Mesh(
+          new THREE.TorusGeometry(r[0], 0.012, 8, 160),
+          new THREE.MeshBasicMaterial({
+            color: i === 1 ? 0x14110f : G,
+            transparent: true,
+            opacity: 0.5,
+          })
+        )
+      );
+      const d = new THREE.Mesh(
+        new THREE.SphereGeometry(0.09, 16, 16),
+        new THREE.MeshBasicMaterial({ color: 0x2fd49b })
+      );
+      pv.add(d);
+      grp.add(pv);
+      rings.push(pv);
+      dots.push({ m: d, r: r[0], s: 0.8 + i * 0.45, o: i * 2 });
+    });
+
+    const N = 260;
+    const pa = new Float32Array(N * 3);
+    for (let i = 0; i < N; i++) {
+      const u = Math.random() * 6.283;
+      const v = Math.acos(2 * Math.random() - 1);
+      const rr = 3.2 + Math.random() * 1.2;
+      pa[i * 3] = rr * Math.sin(v) * Math.cos(u);
+      pa[i * 3 + 1] = rr * Math.sin(v) * Math.sin(u);
+      pa[i * 3 + 2] = rr * Math.cos(v);
+    }
+    const pg = new THREE.BufferGeometry();
+    pg.setAttribute('position', new THREE.BufferAttribute(pa, 3));
+    const pts = new THREE.Points(
+      pg,
+      new THREE.PointsMaterial({ color: G, size: 0.05, transparent: true, opacity: 0.6 })
+    );
+    grp.add(pts);
+
+    // 3. Mouse pointer listener
+    let mx = 0;
+    let my = 0;
+    let sx = 0;
+    let sy = 0;
+    const ld = containerRef.current;
+    const stage = stageRef.current;
+
+    const handlePointerMove = (e) => {
+      mx = e.clientX / window.innerWidth - 0.5;
+      my = e.clientY / window.innerHeight - 0.5;
+      if (ld) {
+        ld.style.setProperty('--mx', e.clientX + 'px');
+        ld.style.setProperty('--my', e.clientY + 'px');
+      }
+    };
+    window.addEventListener('pointermove', handlePointerMove);
+
+    // 4. Paint & UI Updates
+    function addLog(i) {
+      const l = logRef.current;
+      if (l) {
+        const d = document.createElement('div');
+        d.textContent = LOGS[i][1];
+        l.appendChild(d);
+        while (l.children.length > 3) {
+          l.removeChild(l.firstChild);
+        }
+      }
+      if (lblRef.current) {
+        lblRef.current.textContent = LOGS[i][1].slice(2).toUpperCase();
+      }
+    }
+
+    function paint() {
+      const p = Math.floor(P);
+      if (numRef.current) numRef.current.textContent = p + ' / 100';
+      if (pcRef.current) pcRef.current.textContent = p + '%';
+      if (fillRef.current) fillRef.current.style.width = P + '%';
+      if (ringRef.current) ringRef.current.style.strokeDashoffset = 289 * (1 - P / 100);
+
+      if (stRef.current) {
+        const spans = stRef.current.querySelectorAll('span');
+        spans.forEach((s) => {
+          const t = Number(s.dataset.t);
+          s.classList.toggle('on', (P >= t && P > 0) || (s.dataset.t === '0' && P > 1));
+        });
+      }
+
+      for (let i = LOGS.length - 1; i >= 0; i--) {
+        if (P >= LOGS[i][0]) {
+          if (i !== lastLog) {
+            lastLog = i;
+            addLog(i);
+          }
+          break;
+        }
+      }
+
+      if (!reduce && p % 2 === 0) {
+        scramble();
+      }
+    }
+
+    function finish() {
+      scramble();
+      if (orb) orb.classList.add('flash');
+      if (nameEl) nameEl.classList.add('big');
+
+      setTimeout(() => {
+        setIsOut(true);
+        if (ld) ld.classList.add('out');
         setTimeout(() => {
           setIsDone(true);
-          setTimeout(() => {
-            if (onComplete) onComplete();
-          }, 850);
-        }, 350);
-      }
-    }, stepTime);
+          if (onComplete) onComplete();
+        }, 1100);
+      }, 900);
+    }
 
-    return () => clearInterval(interval);
+    // 5. 60FPS RAF Frame Loop
+    function frame(ts) {
+      animId = requestAnimationFrame(frame);
+      const clock = ts / 1000;
+      sx += (mx - sx) * 0.06;
+      sy += (my - sy) * 0.06;
+      const boost = 1 + P / 40;
+
+      if (!reduce) {
+        grp.rotation.y = clock * 0.25 * boost + sx * 1.2;
+        grp.rotation.x = sy * 0.9 + Math.sin(clock * 0.5) * 0.1;
+        core.rotation.y = -clock * 0.3;
+        shell.rotation.y = clock * 0.15;
+        pts.rotation.y = -clock * 0.05;
+      }
+
+      const sc = 0.7 + 0.3 * (P / 100);
+      core.scale.setScalar(sc);
+      edges.scale.setScalar(sc);
+
+      dots.forEach((d) => {
+        const a = clock * d.s + d.o;
+        d.m.position.set(Math.cos(a) * d.r, Math.sin(a) * d.r, 0);
+      });
+
+      R.render(S, cam);
+
+      if (stage) {
+        stage.style.transform = 'translate(' + -sx * 10 + 'px,' + -sy * 8 + 'px)';
+      }
+
+      if (running) {
+        // Natural smooth progression: 4.5 seconds
+        const t = Math.min((ts - t0) / 4500, 1);
+        P = 100 * (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+        if (t >= 1 && !done) {
+          P = 100;
+          done = true;
+          finish();
+        }
+        paint();
+      }
+    }
+
+    // Start Sequence
+    P = 0;
+    done = false;
+    lastLog = -1;
+    if (logRef.current) logRef.current.innerHTML = '';
+    if (orb) orb.classList.remove('flash');
+    if (nameEl) {
+      nameEl.classList.remove('big', 'in');
+      void nameEl.offsetWidth;
+    }
+
+    reveal();
+    scramble();
+    paint();
+
+    animId = requestAnimationFrame(frame);
+
+    const startTimer = setTimeout(() => {
+      t0 = performance.now();
+      running = true;
+    }, 400);
+
+    return () => {
+      clearTimeout(startTimer);
+      if (animId) cancelAnimationFrame(animId);
+      window.removeEventListener('pointermove', handlePointerMove);
+      R.dispose();
+      geo.dispose();
+      pg.dispose();
+      if (R.domElement && R.domElement.parentNode) {
+        R.domElement.parentNode.removeChild(R.domElement);
+      }
+    };
   }, [onComplete]);
 
-  const getStatusMessage = (val) => {
-    if (val < 25) return 'INITIALIZING CORE ENGINE & SHADERS...';
-    if (val < 60) return 'COMPILING LIQUID GLASS REFRACTIONS...';
-    if (val < 90) return 'HYDRATING PORTFOLIO ARTIFACTS...';
-    return 'SYSTEMS NOMINAL // WELCOME';
-  };
-
-  const circumference = 2 * Math.PI * 38; // radius 38
-  const strokeDashoffset = circumference - (count / 100) * circumference;
+  if (isDone) return null;
 
   return (
-    <AnimatePresence>
-      {!isDone && (
-        <motion.div
-          key="preloader-overlay"
-          initial={{ opacity: 1 }}
-          exit={{
-            opacity: 0,
-            transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] }
-          }}
-          className="fixed inset-0 z-[10000] select-none overflow-hidden pointer-events-auto"
-        >
-          {/* Top Half Shutter Curtain (Seamless, no center dividing line) */}
-          <motion.div
-            initial={{ y: 0 }}
-            exit={{
-              y: '-100%',
-              transition: { duration: 0.9, ease: [0.76, 0, 0.24, 1] }
-            }}
-            className={`absolute top-0 left-0 right-0 h-1/2 z-10 transition-colors duration-500 ${isCream ? 'bg-[#FAF7F2]' : 'bg-[#050505]'
-              }`}
-          />
+    <div
+      id="loader-exact"
+      ref={containerRef}
+      className={`loader-root ${isOut ? 'out' : ''}`}
+    >
+      {/* Background FX: Dotted mask, cursor glow, floating blobs, grain */}
+      <div className="loader-exact-bg loader-dots" />
+      <div className="loader-exact-bg loader-glow" />
+      <div className="loader-blob loader-b1" />
+      <div className="loader-blob loader-b2" />
+      <div className="loader-exact-bg loader-grain" />
 
-          {/* Bottom Half Shutter Curtain (Seamless, no center dividing line) */}
-          <motion.div
-            initial={{ y: 0 }}
-            exit={{
-              y: '100%',
-              transition: { duration: 0.9, ease: [0.76, 0, 0.24, 1] }
-            }}
-            className={`absolute bottom-0 left-0 right-0 h-1/2 z-10 transition-colors duration-500 ${isCream ? 'bg-[#FAF7F2]' : 'bg-[#050505]'
-              }`}
-          />
+      {/* Top Telemetry */}
+      <div className="loader-top">
+        <div className="loader-pill">
+          <span className="loader-ping" />
+          PORTFOLIO BOOT // 2026 EDITION
+        </div>
+        <div className="loader-mm">
+          DELHI NCR // 28.6139° N &nbsp;•&nbsp; 60 FPS ACTIVE
+        </div>
+      </div>
 
-          {/* Main Floating Preloader Content Chamber */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{
-              opacity: 0,
-              scale: 1.04,
-              transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] }
-            }}
-            transition={{ duration: 0.4 }}
-            className="absolute inset-0 z-20 flex flex-col justify-between p-6 sm:p-10 md:p-14 max-w-6xl mx-auto overflow-hidden"
-          >
-            {/* Top Telemetry Header Bar */}
-            <div className="flex justify-between items-center text-xs tracking-widest uppercase font-heading pt-2">
-              <div className={`inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border backdrop-blur-md ${isCream
-                ? 'bg-white/80 border-black/10 text-neutral-800'
-                : 'bg-white/[0.04] border-white/[0.08] text-[#A1A1AA]'
-                }`}>
-                <span className="relative flex h-2 w-2">
-                  <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isCream ? 'bg-emerald-600' : 'bg-[#C6FF3D]'
-                    }`} />
-                  <span className={`relative inline-flex rounded-full h-2 w-2 ${isCream ? 'bg-emerald-600' : 'bg-[#C6FF3D]'
-                    }`} />
-                </span>
-                <span className="font-semibold text-[11px]">
-                  PORTFOLIO BOOT // 2026 EDITION
-                </span>
-              </div>
-
-              <div className={`hidden sm:flex items-center gap-3 text-[11px] font-mono ${isCream ? 'text-neutral-500' : 'text-[#71717A]'
-                }`}>
-                <span>DELHI NCR // 28.6139° N</span>
-                <span>•</span>
-                <span className="flex items-center gap-1.5">
-                  <Activity className={`w-3.5 h-3.5 ${isCream ? 'text-emerald-700' : 'text-[#C6FF3D]'}`} />
-                  60 FPS ACTIVE
-                </span>
-              </div>
+      {/* Center Stage: Three.js Orb, Ring, Logo, Scramble Name, Ticker */}
+      <div className="loader-stage" id="stage" ref={stageRef}>
+        <div id="loader-orb" ref={orbRef}>
+          {/* Transparent Canvas is prepended via Three.js */}
+          <div className="loader-badge">
+            <svg viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="46" fill="none" stroke="var(--track)" strokeWidth="3" />
+              <circle
+                ref={ringRef}
+                cx="50"
+                cy="50"
+                r="46"
+                fill="none"
+                stroke="var(--g)"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+                strokeDasharray="289"
+                strokeDashoffset="289"
+              />
+            </svg>
+            <div className="loader-vg">
+              VG<i>.</i>
             </div>
-
-            {/* Central Creative Holographic Stage */}
-            <div className="my-auto py-6 sm:py-8 flex flex-col items-center text-center">
-              {/* Circular Gauge with Live Digital Percentage */}
-              <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center mb-6">
-                {/* SVG Progress Ring */}
-                <svg className="w-full h-full -rotate-90">
-                  <circle
-                    cx="50%"
-                    cy="50%"
-                    r="38"
-                    stroke={isCream ? "rgba(0,0,0,0.06)" : "rgba(255,255,255,0.08)"}
-                    strokeWidth="3"
-                    fill="transparent"
-                  />
-                  <circle
-                    cx="50%"
-                    cy="50%"
-                    r="38"
-                    stroke={isCream ? "#15803D" : "#C6FF3D"}
-                    strokeWidth="3.5"
-                    fill="transparent"
-                    strokeDasharray={circumference}
-                    strokeDashoffset={strokeDashoffset}
-                    strokeLinecap="round"
-                    className="transition-all duration-100"
-                  />
-                </svg>
-
-                {/* Center Monogram with live % badge */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center select-none">
-                  <span className={`font-display font-black text-xl sm:text-2xl leading-none ${isCream ? 'text-neutral-900' : 'text-white'
-                    }`}>
-                    VG<span className={isCream ? 'text-emerald-700' : 'text-[#C6FF3D]'}>.</span>
-                  </span>
-                  <span className={`text-[10px] font-mono font-bold mt-1 ${isCream ? 'text-emerald-700' : 'text-[#C6FF3D]'
-                    }`}>
-                    {count}%
-                  </span>
-                </div>
-              </div>
-
-              {/* Sub-label */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.15 }}
-                className="mb-3"
-              >
-                <span className={`inline-flex items-center gap-2 text-xs sm:text-sm font-heading font-semibold uppercase tracking-[0.25em] ${isCream ? 'text-emerald-700' : 'text-[#C6FF3D]'
-                  }`}>
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>FULL-STACK SOFTWARE ENGINEER & WEB ARCHITECT</span>
-                </span>
-              </motion.div>
-
-              {/* Full Name: GUARANTEED ZERO LETTER-WRAPPING! */}
-              <div className="py-2 px-2 max-w-full overflow-hidden">
-                <h1 className={`font-display font-black text-[clamp(2rem,5.8vw,4.6rem)] leading-none tracking-tight uppercase select-none flex flex-wrap justify-center items-center gap-x-4 sm:gap-x-6 ${isCream ? 'text-neutral-900' : 'text-white'
-                  }`}>
-                  {words.map((word, wIdx) => (
-                    <span key={wIdx} className="inline-flex whitespace-nowrap">
-                      {word.split('').map((char, cIdx) => (
-                        <motion.span
-                          key={cIdx}
-                          initial={{ y: 40, opacity: 0 }}
-                          animate={{ y: 0, opacity: 1 }}
-                          transition={{
-                            duration: 0.55,
-                            delay: 0.15 + (wIdx * 4 + cIdx) * 0.04,
-                            ease: [0.16, 1, 0.3, 1]
-                          }}
-                          className="inline-block"
-                        >
-                          {char}
-                        </motion.span>
-                      ))}
-                    </span>
-                  ))}
-                </h1>
-              </div>
-
-              {/* Tagline */}
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5, duration: 0.5 }}
-                className={`text-xs sm:text-sm font-heading max-w-lg mt-3 leading-relaxed ${isCream ? 'text-neutral-600' : 'text-[#A1A1AA]'
-                  }`}
-              >
-                Crafting high-throughput enterprise portals, liquid-glass aesthetics, and resilient web ecosystems.
-              </motion.p>
+            <div className="loader-pc" ref={pcRef}>
+              0%
             </div>
+          </div>
+        </div>
 
-            {/* Bottom Sleek Progress Console */}
-            <div className={`p-4 sm:p-6 rounded-3xl border transition-all duration-300 max-w-3xl mx-auto w-full ${isCream
-              ? 'bg-white/85 border-black/10 shadow-[0_15px_40px_rgba(0,0,0,0.06)] backdrop-blur-2xl'
-              : 'bg-[#0D0D0D]/90 border-white/[0.08] shadow-[0_15px_40px_rgba(0,0,0,0.8)] backdrop-blur-2xl'
-              }`}>
-              <div className="flex items-center justify-between gap-3 mb-2.5">
-                <div className="flex items-center gap-2">
-                  <span className={`w-2 h-2 rounded-full animate-ping ${isCream ? 'bg-emerald-600' : 'bg-[#C6FF3D]'
-                    }`} />
-                  <span className={`text-[11px] font-mono font-bold tracking-wider ${isCream ? 'text-neutral-800' : 'text-white'
-                    }`}>
-                    {getStatusMessage(count)}
-                  </span>
-                </div>
+        <div className="loader-role">FULL-STACK SOFTWARE ENGINEER &amp; WEB ARCHITECT</div>
 
-                <div className={`text-xs font-mono font-bold ${isCream ? 'text-emerald-700' : 'text-[#C6FF3D]'
-                  }`}>
-                  {count} / 100
-                </div>
-              </div>
+        <h1 className="loader-h1" id="name" ref={nameRef} aria-label="Vasu Goyal" />
 
-              {/* Cyber Glowing Progress Track */}
-              <div className={`relative w-full h-2 rounded-full overflow-hidden p-0.5 border ${isCream
-                ? 'bg-neutral-100 border-black/5'
-                : 'bg-white/[0.04] border-white/[0.06]'
-                }`}>
-                <motion.div
-                  className={`h-full rounded-full relative transition-all duration-100 ${isCream
-                    ? 'bg-emerald-700 shadow-[0_0_12px_rgba(21,128,61,0.5)]'
-                    : 'bg-[#C6FF3D] shadow-[0_0_12px_rgba(198,255,61,0.6)]'
-                    }`}
-                  style={{ width: `${count}%` }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer" />
-                </motion.div>
-              </div>
+        <p className="loader-tag">
+          Crafting high-throughput enterprise portals, liquid-glass aesthetics, and resilient web ecosystems.
+        </p>
 
-              {/* Milestone Ticks */}
-              <div className={`flex justify-between items-center mt-2 px-1 text-[10px] font-mono ${isCream ? 'text-neutral-400' : 'text-[#71717A]'
-                }`}>
-                <span>BOOT // 00</span>
-                <span>COMPILED // 45</span>
-                <span>HYDRATED // 80</span>
-                <span className={count === 100 ? (isCream ? 'text-emerald-700 font-bold' : 'text-[#C6FF3D] font-bold') : ''}>
-                  READY // 100
-                </span>
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+        <div className="loader-ticker">
+          <div>
+            <span>REACT</span>
+            <span>NEXT.JS</span>
+            <span>NODE</span>
+            <span>TYPESCRIPT</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Liquid Glass Card */}
+      <div className="loader-card">
+        <div className="loader-log" ref={logRef} />
+        <div className="loader-row">
+          <span ref={lblRef}>COMPILING LIQUID GLASS REFRACTIONS...</span>
+          <b ref={numRef}>0 / 100</b>
+        </div>
+        <div className="loader-bar">
+          <div className="loader-fill" ref={fillRef} />
+        </div>
+        <div className="loader-st" ref={stRef}>
+          <span data-t="0">BOOT // 00</span>
+          <span data-t="45">COMPILED // 45</span>
+          <span data-t="80">HYDRATED // 80</span>
+          <span data-t="100">READY // 100</span>
+        </div>
+      </div>
+    </div>
   );
 }
