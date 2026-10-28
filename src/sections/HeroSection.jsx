@@ -82,123 +82,140 @@ export default function HeroSection({ isLoaded }) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           {/* ================= LEFT: Clean, High-Impact Brand Typography (7 Cols) ================= */}
           <div className="lg:col-span-7 flex flex-col items-start text-left">
-            {/* Minimal Status Pill */}
+            {/* Status Pill with 3.5 Yrs & 10+ Products Headline */}
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className={`inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border backdrop-blur-md mb-8 ${isCream ? 'bg-black/5 border-black/10 text-neutral-700' : 'bg-white/[0.03] border-white/[0.08] text-[#A1A1AA]'
-                }`}
+              className={`inline-flex flex-wrap items-center gap-2.5 px-4 py-2 rounded-full border backdrop-blur-md mb-6 ${
+                isCream
+                  ? 'bg-sky-50 border-sky-200 text-sky-900'
+                  : 'bg-blue-500/10 border-blue-400/20 text-blue-300'
+              }`}
             >
               <span className="relative flex h-2 w-2">
-                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isCream ? 'bg-emerald-600' : 'bg-[#C6FF3D]'
-                  }`} />
-                <span className={`relative inline-flex rounded-full h-2 w-2 ${isCream ? 'bg-emerald-600' : 'bg-[#C6FF3D]'
-                  }`} />
+                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
+                  isCream ? 'bg-sky-600' : 'bg-blue-400'
+                }`} />
+                <span className={`relative inline-flex rounded-full h-2 w-2 ${
+                  isCream ? 'bg-sky-600' : 'bg-blue-400'
+                }`} />
               </span>
-              <span className="text-xs font-heading font-medium tracking-wider uppercase">
-                {personalData.availability}
+              <span className="text-xs font-heading font-semibold tracking-wide">
+                3.5+ YRS EXPERIENCE &bull; 10+ FULL-STACK PRODUCTS DELIVERED
               </span>
             </motion.div>
 
-            {/* Giant Name & Title */}
-            <div className="overflow-hidden mb-6">
+            {/* Clear, High-Readability Name & Title */}
+            <div className="overflow-hidden mb-4">
               <motion.h1
-                initial={{ y: 70, opacity: 0 }}
+                initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                className={`font-display font-extrabold text-[clamp(2.5rem,6.8vw,6.2rem)] leading-[0.96] tracking-tight uppercase select-none ${isCream ? 'text-neutral-900' : 'text-white'
-                  }`}
+                transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className={`font-display font-extrabold text-[clamp(2.5rem,6.5vw,5.5rem)] leading-[1] tracking-tight uppercase select-none ${
+                  isCream ? 'text-slate-900' : 'text-white'
+                }`}
               >
                 VASU GOYAL
               </motion.h1>
 
               <motion.div
-                initial={{ y: 40, opacity: 0 }}
+                initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                className={`font-display font-bold text-2xl sm:text-4xl mt-2 uppercase tracking-tight ${isCream
-                    ? 'text-neutral-800'
-                    : 'text-transparent bg-clip-text bg-gradient-to-r from-white via-white/80 to-[#A1A1AA]'
-                  }`}
+                transition={{ duration: 0.7, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                className={`font-heading font-bold text-xl sm:text-2xl mt-2 tracking-tight ${
+                  isCream ? 'text-slate-800' : 'text-slate-200'
+                }`}
               >
-                CRAFTING{' '}
-                <span className={isCream ? 'text-emerald-700 font-extrabold' : 'text-[#C6FF3D] text-glow-accent'}>
-                  FAST & BEAUTIFUL
-                </span>{' '}
-                WEB SYSTEMS
+                FULL-STACK SOFTWARE DEVELOPER &bull;{' '}
+                <span className={isCream ? 'text-sky-700 font-extrabold' : 'text-blue-400 font-extrabold'}>
+                  BLG FULL STACK DEV
+                </span>
               </motion.div>
             </div>
 
-            {/* Minimalist Rotating Role Indicator */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.6 }}
-              className={`flex items-center gap-2 text-sm sm:text-base font-heading mb-8 ${isCream ? 'text-neutral-500' : 'text-[#71717A]'
-                }`}
-            >
-              <span className="uppercase tracking-widest text-xs">FOCUSED ON:</span>
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={roleIndex}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                  className={`font-display font-bold pb-0.5 text-sm sm:text-base tracking-wide border-b ${isCream
-                      ? 'text-neutral-900 border-emerald-700'
-                      : 'text-white border-[#C6FF3D]'
-                    }`}
-                >
-                  {personalData.roles[roleIndex]}
-                </motion.span>
-              </AnimatePresence>
-            </motion.div>
-
-            {/* Clean Description with Breathing Room */}
+            {/* Crisp 10-Second Recruiter Pitch */}
             <motion.p
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7, duration: 0.6 }}
-              className={`text-sm sm:text-base leading-relaxed max-w-xl mb-10 font-normal ${isCream ? 'text-neutral-600' : 'text-[#A1A1AA]'
-                }`}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              className={`text-sm sm:text-base leading-relaxed max-w-xl mb-6 font-normal ${
+                isCream ? 'text-slate-700' : 'text-slate-300'
+              }`}
             >
-              {personalData.shortBio}
+              I build and deliver mission-critical web portals, enterprise HRMS systems, and end-to-end full-stack web products. From complex database schema to high-concurrency APIs and intuitive frontend interfaces.
             </motion.p>
 
-            {/* Prominent, Spacious CTAs */}
+            {/* Quick Strong Pointers (Why Hire Me in 10s) */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
-              className="flex flex-wrap items-center gap-4 sm:gap-6"
+              transition={{ delay: 0.6, duration: 0.5 }}
+              className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full max-w-xl mb-8"
+            >
+              {[
+                { label: '3.5+ Years Production Experience', sub: 'End-to-end architecture & live delivery' },
+                { label: '10+ Products Built & Shipped', sub: 'ERP, HRMS, University & E-Procurement' },
+                { label: 'Production Tech Stack', sub: 'React, Next.js, Node.js, TypeScript, PostgreSQL' },
+                { label: 'High Reliability & Code Quality', sub: '99.9% uptime, clean scalable architecture' },
+              ].map((item, idx) => (
+                <div
+                  key={idx}
+                  className={`p-3 rounded-xl border flex items-start gap-2.5 transition-all ${
+                    isCream
+                      ? 'bg-white border-slate-200 shadow-xs text-slate-800'
+                      : 'bg-slate-900/60 border-slate-800 text-slate-200'
+                  }`}
+                >
+                  <div className={`mt-0.5 w-4 h-4 rounded-full flex items-center justify-center shrink-0 ${
+                    isCream ? 'bg-sky-100 text-sky-700' : 'bg-blue-500/20 text-blue-400'
+                  }`}>
+                    <Check className="w-2.5 h-2.5 stroke-[3]" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-heading font-bold leading-tight">{item.label}</p>
+                    <p className={`text-[11px] leading-tight mt-0.5 ${
+                      isCream ? 'text-slate-500' : 'text-slate-400'
+                    }`}>{item.sub}</p>
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+
+            {/* Prominent CTAs */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7, duration: 0.5 }}
+              className="flex flex-wrap items-center gap-4"
             >
               <MagneticButton strength={0.35}>
                 <button
                   onClick={() => scrollToSection('projects')}
                   data-cursor="pointer"
-                  className={`group px-8 py-4 rounded-full font-heading font-bold text-xs uppercase tracking-widest transition-all duration-300 flex items-center gap-2.5 active:scale-95 ${isCream
-                      ? 'bg-emerald-700 hover:bg-emerald-800 text-white shadow-lg shadow-emerald-700/20'
-                      : 'bg-[#C6FF3D] text-[#050505] shadow-[0_0_25px_rgba(198,255,61,0.35)] hover:shadow-[0_0_45px_rgba(198,255,61,0.55)]'
-                    }`}
+                  className={`group px-7 py-3.5 rounded-full font-heading font-bold text-xs uppercase tracking-wider transition-all duration-300 flex items-center gap-2.5 active:scale-95 shadow-md ${
+                    isCream
+                      ? 'bg-sky-600 hover:bg-sky-700 text-white shadow-sky-600/20'
+                      : 'bg-blue-500 hover:bg-blue-600 text-white shadow-blue-500/25'
+                  }`}
                 >
-                  <span>VIEW PROJECTS</span>
+                  <span>EXPLORE 10+ PROJECTS</span>
                   <Sparkles className="w-4 h-4 group-hover:rotate-45 transition-transform duration-300" />
                 </button>
               </MagneticButton>
 
               <MagneticButton strength={0.35}>
                 <button
-                  onClick={() => scrollToSection('contact')}
+                  onClick={() => scrollToSection('about')}
                   data-cursor="pointer"
-                  className={`group px-8 py-4 rounded-full font-heading font-semibold text-xs uppercase tracking-widest transition-all duration-300 flex items-center gap-2.5 active:scale-95 border ${isCream
-                      ? 'bg-black/5 hover:bg-black/10 text-neutral-900 border-black/10'
-                      : 'bg-white/[0.04] hover:bg-white/[0.08] text-white border-white/[0.12] hover:border-[#C6FF3D]/50'
-                    }`}
+                  className={`group px-7 py-3.5 rounded-full font-heading font-semibold text-xs uppercase tracking-wider transition-all duration-300 flex items-center gap-2.5 active:scale-95 border ${
+                    isCream
+                      ? 'bg-white hover:bg-slate-50 text-slate-800 border-slate-200'
+                      : 'bg-slate-900/60 hover:bg-slate-800 text-white border-slate-700 hover:border-blue-400/50'
+                  }`}
                 >
-                  <span>LET'S TALK</span>
-                  <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  <span>WHY HIRE ME</span>
+                  <ArrowDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
                 </button>
               </MagneticButton>
             </motion.div>

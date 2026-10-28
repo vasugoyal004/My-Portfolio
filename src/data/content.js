@@ -5,32 +5,50 @@
 
 export const personalData = {
   name: "Vasu Goyal",
-  title: "Software Developer",
+  title: "Full-Stack Software Developer",
+  experienceYears: "3.5+",
+  tagline: "Building high-performance enterprise portals & scalable full-stack products.",
+  shortBio: "3.5+ years of hands-on production experience engineering 10+ end-to-end full-stack products, enterprise ERP/HRMS systems, and resilient cloud architectures. Built with React, Next.js, Node.js, and TypeScript.",
   roles: [
     "Full-Stack Developer",
-    "Web Portal Specialist",
-    "React & Node Engineer",
-    "Performance Architect"
+    "BLG Full Stack Developer",
+    "React & Node.js Specialist",
+    "Enterprise Portal Architect"
   ],
-  experienceYears: "3.5+",
-  tagline: "I build fast, scalable & beautiful web experiences.",
-  shortBio: "3.5+ years of craft in engineering end-to-end web applications, enterprise management portals, and high-performance digital platforms. Obsessed with clean code, tactile animations, and fluid user experiences.",
+  whyHireMe: [
+    {
+      title: "3.5+ Years Production Experience",
+      desc: "Proven track record delivering reliable, production-grade applications from architectural design to deployment."
+    },
+    {
+      title: "10+ End-to-End Products Shipped",
+      desc: "Architected complete lifecycles: complex databases, secure REST/RBAC APIs, payment flows, and responsive web portals."
+    },
+    {
+      title: "Enterprise Systems Expert (BLG Full Stack Dev)",
+      desc: "Engineered high-concurrency systems including multi-tier HRMS, e-procurement tender portals, and university platforms."
+    },
+    {
+      title: "Zero-Overhead, Rapid Delivery",
+      desc: "Clean code, TypeScript rigor, and fast turnaround with 99.9% uptime and optimal Lighthouse speed scores."
+    }
+  ],
   fullBio: [
-    "I am a passionate Full-Stack Software Developer dedicated to turning complex operational challenges into intuitive, high-octane web applications and portals.",
-    "Over the past 3.5+ years, I have architected and deployed mission-critical web platforms—from comprehensive university portals and e-procurement tender engines to enterprise Human Resource Management Systems (HRMS) handling multi-tier workflows.",
-    "My engineering philosophy combines ruthless performance, scalable system architecture, and Awwwards-inspired modern aesthetics. Every pixel, transition, and API endpoint is built with precision."
+    "I am Vasu Goyal, a Full-Stack Software Developer with 3.5+ years of experience engineering 10+ scalable, end-to-end web products and enterprise portals.",
+    "As a BLG Full Stack Developer, I specialize in taking mission-critical projects from blank canvas to battle-tested production. My core expertise covers enterprise HRMS architectures, e-procurement tender engines, and university automation platforms.",
+    "My focus is pragmatic: high developer velocity, zero-bloat architecture, bulletproof security (RBAC, JWT, audit logs), and snappy, readable user interfaces that convert visitors and streamline daily operations."
   ],
-  location: "India , Rajasthan , Jodhpur",
-  availability: "Available for freelance & full-time roles",
+  location: "India, Rajasthan, Jodhpur",
+  availability: "Available for full-time & high-impact projects",
   email: "vasugoyal536@gmail.com",
   phone: "+91 7850963027",
   avatar: "/my_photo.png",
   resumeUrl: "#",
   stats: [
-    { number: "3.5+", label: "Years Experience", suffix: "" },
-    { number: "15+", label: "Projects Shipped", suffix: "" },
-    { number: "99.9%", label: "Uptime & Quality", suffix: "" },
-    { number: "100%", label: "Dedication", suffix: "" }
+    { number: "3.5+", label: "Years Experience", suffix: " Yrs" },
+    { number: "10+", label: "Full-Stack Products Shipped", suffix: "" },
+    { number: "99.9%", label: "System Uptime & Stability", suffix: "" },
+    { number: "100%", label: "Code Ownership & Delivery", suffix: "" }
   ],
   socials: [
     { name: "GitHub", url: "https://github.com", icon: "Github" },
@@ -453,6 +471,42 @@ export const testimonialsData = [
     role: "Product Founder",
     organization: "Apex Digital Labs",
     avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80"
+  }
+];
+
+export const blogPostsData = [
+  {
+    id: "full-stack-developer-guide",
+    slug: "building-scalable-enterprise-portals-react-node",
+    title: "How to Build High-Concurrency Enterprise Portals with React & Node.js",
+    description: "In-depth architecture breakdown of multi-tenant RBAC, database indexing, and state management for mission-critical web applications.",
+    category: "Full Stack Architecture",
+    readTime: "6 min read",
+    date: "Oct 2026",
+    tags: ["React", "Node.js", "RBAC", "PostgreSQL", "Enterprise Portals"],
+    content: "When building an enterprise portal for high-concurrency environments like HRMS or E-Procurement, performance bottlenecks rarely start on the frontend. They originate in poor database indexing, unoptimized JWT verification pipelines, and tight coupling of state. In this post, I break down the architectural blueprint I used across 10+ end-to-end full stack products."
+  },
+  {
+    id: "nextjs-seo-performance",
+    slug: "full-stack-developer-seo-performance-optimization",
+    title: "Full Stack Developer SEO & Core Web Vitals Blueprint",
+    description: "How to achieve 98+ Lighthouse scores, server-side caching, dynamic OpenGraph cards, and schema metadata in modern web products.",
+    category: "SEO & Performance",
+    readTime: "5 min read",
+    date: "Sep 2026",
+    tags: ["SEO", "Next.js", "Core Web Vitals", "Full Stack"],
+    content: "For a full stack developer, SEO is not merely adding meta tags. It requires server-side rendering (SSR), dynamic sitemaps, structured JSON-LD schemas, and optimizing Largest Contentful Paint (LCP) under 1.2s to rank organically on Google."
+  },
+  {
+    id: "secure-rbac-auth-node",
+    slug: "implementing-secure-rbac-authentication-express-node",
+    title: "Zero-Vulnerability Role-Based Access Control (RBAC) in Node.js",
+    description: "Battle-tested middleware patterns for fine-grained permissions, secure refresh token rotation, and audit trail logging.",
+    category: "Security & Backend",
+    readTime: "7 min read",
+    date: "Aug 2026",
+    tags: ["Security", "JWT", "Node.js", "Express", "RBAC"],
+    content: "Security is non-negotiable in production. A single flaw in role hierarchy can expose sensitive company payroll or procurement bids. Learn how to structure modular permission trees with wildcard evaluation and zero layout-thrashing."
   }
 ];
 

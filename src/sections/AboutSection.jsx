@@ -262,19 +262,19 @@ export default function AboutSection() {
                     <div className="flex justify-between items-center">
                       <div>
                         <p className="text-xs font-display font-bold uppercase">
-                          Lead Software Developer
+                          BLG Full Stack Developer
                         </p>
                         <p
-                          className={`text-[11px] font-heading ${
-                            isCream ? 'text-neutral-600' : 'text-[#A1A1AA]'
+                          className={`text-[11px] font-heading font-semibold ${
+                            isCream ? 'text-sky-700' : 'text-blue-400'
                           }`}
                         >
-                          3.5+ Years Production Craft
+                          3.5+ Yrs Exp &bull; 10+ Products Delivered
                         </p>
                       </div>
                       <Code2
                         className={`w-5 h-5 ${
-                          isCream ? 'text-emerald-700' : 'text-[#C6FF3D]'
+                          isCream ? 'text-sky-700' : 'text-blue-400'
                         }`}
                       />
                     </div>
@@ -300,10 +300,33 @@ export default function AboutSection() {
             </div>
           </div>
 
-          {/* RIGHT: Scroll-Linked Word Bio + Features + Stats */}
+          {/* RIGHT: Recruiter Highlights + Word Bio + Features + Stats */}
           <div className="lg:col-span-7 flex flex-col justify-between">
+            {/* Instant Recruiter Highlights Box */}
+            <div className={`p-5 rounded-2xl border mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${
+              isCream
+                ? 'bg-sky-50/70 border-sky-200/80 text-slate-800'
+                : 'bg-blue-950/20 border-blue-500/20 text-slate-200'
+            }`}>
+              <div>
+                <span className={`text-[11px] font-heading font-extrabold uppercase tracking-wider px-2 py-0.5 rounded ${
+                  isCream ? 'bg-sky-200/60 text-sky-900' : 'bg-blue-500/20 text-blue-300'
+                }`}>
+                  QUICK CREDENTIALS
+                </span>
+                <h3 className="text-base sm:text-lg font-heading font-bold mt-1.5 leading-snug">
+                  3.5+ Years Experience &bull; 10+ Full Stack Products Delivered &bull; BLG Full Stack Dev
+                </h3>
+                <p className={`text-xs mt-1 leading-relaxed ${
+                  isCream ? 'text-slate-600' : 'text-slate-400'
+                }`}>
+                  Specialized in enterprise web portals, high-concurrency systems, role-based security, and zero-compromise product engineering.
+                </p>
+              </div>
+            </div>
+
             {/* Word-by-word reveal text */}
-            <div className="mb-10 text-lg sm:text-2xl md:text-3xl leading-relaxed font-heading select-none">
+            <div className="mb-10 text-lg sm:text-2xl leading-relaxed font-heading select-none">
               {words.map((word, index) => {
                 const start = index / words.length;
                 const end = start + 1 / words.length;

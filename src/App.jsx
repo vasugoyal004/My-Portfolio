@@ -19,6 +19,7 @@ import SkillsSection from './sections/SkillsSection';
 import ProjectsSection from './sections/ProjectsSection';
 import ExperienceSection from './sections/ExperienceSection';
 import ServicesTestimonialsSection from './sections/ServicesTestimonialsSection';
+import BlogSection from './sections/BlogSection';
 import ContactSection from './sections/ContactSection';
 
 // Lazy Loaded Pages for optimal code-splitting and faster initial bundle
@@ -27,8 +28,8 @@ const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 function RouteLoadingFallback() {
   return (
-    <div className="min-h-screen bg-[#050505] flex items-center justify-center">
-      <div className="w-8 h-8 rounded-full border-2 border-white/[0.1] border-t-[#C6FF3D] animate-spin" />
+    <div className="min-h-screen bg-[#090B0E] flex items-center justify-center">
+      <div className="w-8 h-8 rounded-full border-2 border-white/[0.1] border-t-[#3B82F6] animate-spin" />
     </div>
   );
 }
@@ -44,6 +45,7 @@ function HomePage({ isLoaded }) {
         <ProjectsSection />
         <ExperienceSection />
         <ServicesTestimonialsSection />
+        <BlogSection />
         <ContactSection />
       </main>
       <Footer />

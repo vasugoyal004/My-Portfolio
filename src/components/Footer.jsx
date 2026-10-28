@@ -94,7 +94,7 @@ export default function Footer() {
             <ul className={`space-y-2.5 text-xs font-heading font-medium uppercase ${
               isCream ? 'text-[#334155]' : 'text-[#A1A1AA]'
             }`}>
-              {['about', 'skills', 'projects', 'experience', 'services', 'contact'].map((sec) => (
+              {['about', 'skills', 'projects', 'experience', 'services', 'blog', 'contact'].map((sec) => (
                 <li key={sec}>
                   <a
                     href={`/#${sec}`}
