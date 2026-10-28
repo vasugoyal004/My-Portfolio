@@ -17,11 +17,13 @@ import {
 } from 'lucide-react';
 import { projectsData } from '../data/content';
 import MagneticButton from '../components/MagneticButton';
+import { useTheme } from '../context/ThemeContext';
 
 export default function ProjectDetailPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const heroRef = useRef(null);
+  const { isCream } = useTheme();
 
   // Scroll to top on slug change
   useEffect(() => {
@@ -42,16 +44,20 @@ export default function ProjectDetailPage() {
 
   if (!project) {
     return (
-      <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center px-4 text-center">
-        <h1 className="font-display font-extrabold text-4xl text-white mb-4">
+      <div className={`min-h-screen flex flex-col items-center justify-center px-4 text-center transition-colors duration-500 ${
+        isCream ? 'bg-[#FAF7F2] text-[#0F172A]' : 'bg-[#050505] text-white'
+      }`}>
+        <h1 className="font-display font-extrabold text-4xl mb-4">
           PROJECT NOT FOUND
         </h1>
-        <p className="text-[#A1A1AA] text-sm mb-8 font-heading">
+        <p className={`text-sm mb-8 font-heading ${isCream ? 'text-[#475569]' : 'text-[#A1A1AA]'}`}>
           The requested case study does not exist or has been relocated.
         </p>
         <Link
           to="/#projects"
-          className="px-6 py-3 rounded-full bg-[#C6FF3D] text-[#050505] font-heading font-bold text-xs uppercase tracking-widest"
+          className={`px-6 py-3 rounded-full font-heading font-bold text-xs uppercase tracking-widest ${
+            isCream ? 'bg-[#15803D] text-white' : 'bg-[#C6FF3D] text-[#050505]'
+          }`}
         >
           BACK TO PORTFOLIO
         </Link>
@@ -64,13 +70,21 @@ export default function ProjectDetailPage() {
   const nextProject = projectsData[nextProjectIndex];
 
   return (
-    <article className="min-h-screen bg-[#050505] text-white pt-24 pb-20 overflow-x-hidden selection:bg-[#C6FF3D] selection:text-[#050505]">
+    <article className={`min-h-screen pt-24 pb-20 overflow-x-hidden transition-colors duration-500 ${
+      isCream
+        ? 'bg-[#FAF7F2] text-[#0F172A] selection:bg-[#15803D] selection:text-white'
+        : 'bg-[#050505] text-white selection:bg-[#C6FF3D] selection:text-[#050505]'
+    }`}>
       {/* Back Button Floating Pill */}
       <div className="max-w-6xl mx-auto px-4 sm:px-8 mb-8">
         <MagneticButton strength={0.3}>
           <button
             onClick={() => navigate('/#projects')}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/[0.05] hover:bg-[#C6FF3D] border border-white/[0.1] hover:border-[#C6FF3D] text-xs font-heading font-semibold uppercase tracking-wider text-white hover:text-[#050505] transition-all duration-300 group"
+            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-heading font-semibold uppercase tracking-wider transition-all duration-300 group ${
+              isCream
+                ? 'bg-white/80 hover:bg-[#15803D] border border-emerald-950/10 hover:border-[#15803D] text-[#0F172A] hover:text-white shadow-sm'
+                : 'bg-white/[0.05] hover:bg-[#C6FF3D] border border-white/[0.1] hover:border-[#C6FF3D] text-white hover:text-[#050505]'
+            }`}
           >
             <ArrowLeft className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" />
             <span>BACK TO ALL PROJECTS</span>
@@ -80,43 +94,63 @@ export default function ProjectDetailPage() {
 
       {/* Hero Header */}
       <header className="max-w-6xl mx-auto px-4 sm:px-8 mb-12 sm:mb-16">
-        <div className="flex items-center gap-3 text-xs font-heading uppercase tracking-widest text-[#C6FF3D] mb-4">
-          <span className="w-2 h-2 rounded-full bg-[#C6FF3D] animate-ping" />
+        <div className={`flex items-center gap-3 text-xs font-heading uppercase tracking-widest mb-4 font-bold ${
+          isCream ? 'text-[#15803D]' : 'text-[#C6FF3D]'
+        }`}>
+          <span className={`w-2 h-2 rounded-full animate-ping ${isCream ? 'bg-[#15803D]' : 'bg-[#C6FF3D]'}`} />
           <span>CASE STUDY // {project.categoryLabel}</span>
         </div>
 
-        <h1 className="font-display font-black text-4xl sm:text-6xl md:text-7xl uppercase tracking-tight text-white mb-6 leading-[1.05]">
+        <h1 className={`font-display font-black text-4xl sm:text-6xl md:text-7xl uppercase tracking-tight mb-6 leading-[1.05] ${
+          isCream ? 'text-[#0F172A]' : 'text-white'
+        }`}>
           {project.title}
         </h1>
 
-        <p className="text-base sm:text-xl font-heading text-[#A1A1AA] max-w-3xl leading-relaxed mb-8">
+        <p className={`text-base sm:text-xl font-heading max-w-3xl leading-relaxed mb-8 ${
+          isCream ? 'text-[#475569]' : 'text-[#A1A1AA]'
+        }`}>
           {project.subtitle}
         </p>
 
         {/* Project Meta Details Bar */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 rounded-2xl bg-[#0D0D0D] border border-white/[0.08]">
+        <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 p-6 rounded-2xl ${
+          isCream
+            ? 'liquid-glass-card border border-emerald-950/10'
+            : 'bg-[#0D0D0D] border border-white/[0.08]'
+        }`}>
           <div>
-            <div className="flex items-center gap-1.5 text-xs font-heading uppercase tracking-wider text-[#71717A] mb-1">
-              <User className="w-3.5 h-3.5 text-[#C6FF3D]" />
+            <div className={`flex items-center gap-1.5 text-xs font-heading uppercase tracking-wider mb-1 ${
+              isCream ? 'text-[#64748B]' : 'text-[#71717A]'
+            }`}>
+              <User className={`w-3.5 h-3.5 ${isCream ? 'text-[#15803D]' : 'text-[#C6FF3D]'}`} />
               <span>CLIENT</span>
             </div>
-            <div className="font-heading font-bold text-sm text-white">{project.client}</div>
+            <div className={`font-heading font-bold text-sm ${isCream ? 'text-[#0F172A]' : 'text-white'}`}>
+              {project.client}
+            </div>
           </div>
 
           <div>
-            <div className="flex items-center gap-1.5 text-xs font-heading uppercase tracking-wider text-[#71717A] mb-1">
-              <Layers className="w-3.5 h-3.5 text-[#C6FF3D]" />
+            <div className={`flex items-center gap-1.5 text-xs font-heading uppercase tracking-wider mb-1 ${
+              isCream ? 'text-[#64748B]' : 'text-[#71717A]'
+            }`}>
+              <Layers className={`w-3.5 h-3.5 ${isCream ? 'text-[#15803D]' : 'text-[#C6FF3D]'}`} />
               <span>MY ROLE</span>
             </div>
-            <div className="font-heading font-bold text-sm text-white">{project.role}</div>
+            <div className={`font-heading font-bold text-sm ${isCream ? 'text-[#0F172A]' : 'text-white'}`}>
+              {project.role}
+            </div>
           </div>
 
           <div>
-            <div className="flex items-center gap-1.5 text-xs font-heading uppercase tracking-wider text-[#71717A] mb-1">
-              <Calendar className="w-3.5 h-3.5 text-[#C6FF3D]" />
+            <div className={`flex items-center gap-1.5 text-xs font-heading uppercase tracking-wider mb-1 ${
+              isCream ? 'text-[#64748B]' : 'text-[#71717A]'
+            }`}>
+              <Calendar className={`w-3.5 h-3.5 ${isCream ? 'text-[#15803D]' : 'text-[#C6FF3D]'}`} />
               <span>TIMELINE</span>
             </div>
-            <div className="font-heading font-bold text-sm text-white">
+            <div className={`font-heading font-bold text-sm ${isCream ? 'text-[#0F172A]' : 'text-white'}`}>
               {project.year} ({project.duration})
             </div>
           </div>
@@ -128,7 +162,11 @@ export default function ProjectDetailPage() {
                   href={project.liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 rounded-full bg-[#C6FF3D] text-[#050505] text-xs font-heading font-bold uppercase tracking-wider flex items-center gap-1.5 hover:shadow-[0_0_20px_rgba(198,255,61,0.4)] transition-all"
+                  className={`px-4 py-2 rounded-full text-xs font-heading font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all ${
+                    isCream
+                      ? 'bg-[#15803D] text-white hover:bg-[#166534] shadow-[0_4px_14px_rgba(21,128,61,0.25)]'
+                      : 'bg-[#C6FF3D] text-[#050505] hover:shadow-[0_0_20px_rgba(198,255,61,0.4)]'
+                  }`}
                 >
                   <span>LIVE</span>
                   <ExternalLink className="w-3.5 h-3.5" />
@@ -142,7 +180,11 @@ export default function ProjectDetailPage() {
                   href={project.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 rounded-full bg-white/[0.06] hover:bg-white/[0.12] text-white border border-white/[0.1] text-xs font-heading font-semibold uppercase tracking-wider flex items-center gap-1.5 transition-all"
+                  className={`px-4 py-2 rounded-full border text-xs font-heading font-semibold uppercase tracking-wider flex items-center gap-1.5 transition-all ${
+                    isCream
+                      ? 'bg-white/80 hover:bg-white text-[#0F172A] border-emerald-950/10'
+                      : 'bg-white/[0.06] hover:bg-white/[0.12] text-white border-white/[0.1]'
+                  }`}
                 >
                   <Github className="w-3.5 h-3.5" />
                   <span>CODE</span>
@@ -160,14 +202,20 @@ export default function ProjectDetailPage() {
       >
         <motion.div
           style={{ y: heroImageY, opacity: heroOpacity }}
-          className="relative rounded-3xl overflow-hidden aspect-[16/9] bg-[#121212] border border-white/[0.08]"
+          className={`relative rounded-3xl overflow-hidden aspect-[16/9] border ${
+            isCream
+              ? 'bg-[#EFE9DF] border-emerald-950/10 shadow-lg'
+              : 'bg-[#121212] border-white/[0.08]'
+          }`}
         >
           <img
             src={project.coverImage}
             alt={project.title}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent opacity-60" />
+          <div className={`absolute inset-0 bg-gradient-to-t via-transparent to-transparent opacity-60 ${
+            isCream ? 'from-[#FAF7F2]' : 'from-[#050505]'
+          }`} />
         </motion.div>
       </div>
 
@@ -178,13 +226,23 @@ export default function ProjectDetailPage() {
             {project.metrics.map((metric, mIdx) => (
               <div
                 key={mIdx}
-                className="p-6 rounded-2xl glass-card border border-white/[0.08] relative overflow-hidden"
+                className={`p-6 rounded-2xl relative overflow-hidden ${
+                  isCream
+                    ? 'liquid-glass-card border border-emerald-950/10'
+                    : 'glass-card border border-white/[0.08]'
+                }`}
               >
-                <div className="absolute top-0 right-0 w-16 h-16 bg-[#C6FF3D]/5 rounded-bl-full pointer-events-none" />
-                <div className="font-display font-black text-3xl sm:text-4xl text-white mb-2">
-                  <span className="text-[#C6FF3D]">{metric.value}</span>
+                <div className={`absolute top-0 right-0 w-16 h-16 rounded-bl-full pointer-events-none ${
+                  isCream ? 'bg-emerald-500/10' : 'bg-[#C6FF3D]/5'
+                }`} />
+                <div className={`font-display font-black text-3xl sm:text-4xl mb-2 ${
+                  isCream ? 'text-[#0F172A]' : 'text-white'
+                }`}>
+                  <span className={isCream ? 'text-[#15803D]' : 'text-[#C6FF3D]'}>{metric.value}</span>
                 </div>
-                <div className="text-xs font-heading uppercase tracking-wider text-[#A1A1AA]">
+                <div className={`text-xs font-heading uppercase tracking-wider ${
+                  isCream ? 'text-[#64748B]' : 'text-[#A1A1AA]'
+                }`}>
                   {metric.label}
                 </div>
               </div>
@@ -198,15 +256,21 @@ export default function ProjectDetailPage() {
         {/* Overview & Problem / Solution Grid */}
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           <div className="lg:col-span-4">
-            <span className="text-xs font-heading font-semibold uppercase tracking-[0.2em] text-[#C6FF3D] block mb-2">
+            <span className={`text-xs font-heading font-semibold uppercase tracking-[0.2em] block mb-2 ${
+              isCream ? 'text-[#15803D]' : 'text-[#C6FF3D]'
+            }`}>
               01 // THE CHALLENGE
             </span>
-            <h2 className="font-display font-bold text-2xl sm:text-3xl text-white uppercase">
+            <h2 className={`font-display font-bold text-2xl sm:text-3xl uppercase ${
+              isCream ? 'text-[#0F172A]' : 'text-white'
+            }`}>
               BACKGROUND & PROBLEM STATEMENT
             </h2>
           </div>
-          <div className="lg:col-span-8 space-y-6 text-[#A1A1AA] text-base leading-relaxed font-heading">
-            <p className="text-lg text-white font-medium">
+          <div className={`lg:col-span-8 space-y-6 text-base leading-relaxed font-heading ${
+            isCream ? 'text-[#475569]' : 'text-[#A1A1AA]'
+          }`}>
+            <p className={`text-lg font-medium ${isCream ? 'text-[#0F172A]' : 'text-white'}`}>
               {project.overview}
             </p>
             <p>
@@ -216,17 +280,25 @@ export default function ProjectDetailPage() {
         </section>
 
         {/* The Solution & System Architecture */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-10 pt-12 border-t border-white/[0.08]">
+        <section className={`grid grid-cols-1 lg:grid-cols-12 gap-10 pt-12 border-t ${
+          isCream ? 'border-black/[0.08]' : 'border-white/[0.08]'
+        }`}>
           <div className="lg:col-span-4">
-            <span className="text-xs font-heading font-semibold uppercase tracking-[0.2em] text-[#C6FF3D] block mb-2">
+            <span className={`text-xs font-heading font-semibold uppercase tracking-[0.2em] block mb-2 ${
+              isCream ? 'text-[#15803D]' : 'text-[#C6FF3D]'
+            }`}>
               02 // THE SOLUTION
             </span>
-            <h2 className="font-display font-bold text-2xl sm:text-3xl text-white uppercase">
+            <h2 className={`font-display font-bold text-2xl sm:text-3xl uppercase ${
+              isCream ? 'text-[#0F172A]' : 'text-white'
+            }`}>
               ENGINEERING & ARCHITECTURE
             </h2>
           </div>
           <div className="lg:col-span-8 space-y-6">
-            <p className="text-[#A1A1AA] text-base leading-relaxed font-heading">
+            <p className={`text-base leading-relaxed font-heading ${
+              isCream ? 'text-[#475569]' : 'text-[#A1A1AA]'
+            }`}>
               {project.solution}
             </p>
 
@@ -236,10 +308,18 @@ export default function ProjectDetailPage() {
                 {project.architecture.map((item, aIdx) => (
                   <div
                     key={aIdx}
-                    className="p-4 rounded-xl bg-[#0D0D0D] border border-white/[0.06] flex items-start gap-3.5"
+                    className={`p-4 rounded-xl flex items-start gap-3.5 border ${
+                      isCream
+                        ? 'liquid-glass-card border-emerald-950/10'
+                        : 'bg-[#0D0D0D] border-white/[0.06]'
+                    }`}
                   >
-                    <CheckCircle className="w-5 h-5 text-[#C6FF3D] shrink-0 mt-0.5" />
-                    <span className="text-sm font-heading text-white">{item}</span>
+                    <CheckCircle className={`w-5 h-5 shrink-0 mt-0.5 ${
+                      isCream ? 'text-[#15803D]' : 'text-[#C6FF3D]'
+                    }`} />
+                    <span className={`text-sm font-heading ${isCream ? 'text-[#0F172A]' : 'text-white'}`}>
+                      {item}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -248,12 +328,16 @@ export default function ProjectDetailPage() {
         </section>
 
         {/* Key Features */}
-        <section className="pt-12 border-t border-white/[0.08]">
+        <section className={`pt-12 border-t ${isCream ? 'border-black/[0.08]' : 'border-white/[0.08]'}`}>
           <div className="mb-10">
-            <span className="text-xs font-heading font-semibold uppercase tracking-[0.2em] text-[#C6FF3D] block mb-2">
+            <span className={`text-xs font-heading font-semibold uppercase tracking-[0.2em] block mb-2 ${
+              isCream ? 'text-[#15803D]' : 'text-[#C6FF3D]'
+            }`}>
               03 // CAPABILITIES
             </span>
-            <h2 className="font-display font-bold text-2xl sm:text-3xl text-white uppercase">
+            <h2 className={`font-display font-bold text-2xl sm:text-3xl uppercase ${
+              isCream ? 'text-[#0F172A]' : 'text-white'
+            }`}>
               KEY DELIVERABLES & FEATURES
             </h2>
           </div>
@@ -262,12 +346,22 @@ export default function ProjectDetailPage() {
             {project.keyFeatures.map((feature, fIdx) => (
               <div
                 key={fIdx}
-                className="p-6 rounded-2xl glass-card border border-white/[0.08] relative group hover:border-[#C6FF3D]/40 transition-colors"
+                className={`p-6 rounded-2xl relative group transition-all duration-300 ${
+                  isCream
+                    ? 'liquid-glass-card border border-emerald-950/10 hover:border-[#15803D]/40'
+                    : 'glass-card border border-white/[0.08] hover:border-[#C6FF3D]/40'
+                }`}
               >
-                <div className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.08] group-hover:border-[#C6FF3D]/40 flex items-center justify-center text-[#C6FF3D] mb-4 text-xs font-bold font-heading">
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center mb-4 text-xs font-bold font-heading border ${
+                  isCream
+                    ? 'bg-emerald-50 text-[#15803D] border-emerald-200'
+                    : 'bg-white/[0.04] text-[#C6FF3D] border-white/[0.08]'
+                }`}>
                   0{fIdx + 1}
                 </div>
-                <p className="text-sm font-heading font-medium text-white leading-relaxed">
+                <p className={`text-sm font-heading font-medium leading-relaxed ${
+                  isCream ? 'text-[#0F172A]' : 'text-white'
+                }`}>
                   {feature}
                 </p>
               </div>
@@ -276,16 +370,26 @@ export default function ProjectDetailPage() {
         </section>
 
         {/* Tech Stack Matrix */}
-        <section className="p-8 sm:p-10 rounded-3xl bg-[#0D0D0D] border border-white/[0.08]">
-          <h3 className="font-display font-bold text-xl sm:text-2xl text-white uppercase mb-6 flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-[#C6FF3D]" />
+        <section className={`p-8 sm:p-10 rounded-3xl border ${
+          isCream
+            ? 'liquid-glass-card border-emerald-950/10'
+            : 'bg-[#0D0D0D] border-white/[0.08]'
+        }`}>
+          <h3 className={`font-display font-bold text-xl sm:text-2xl uppercase mb-6 flex items-center gap-2 ${
+            isCream ? 'text-[#0F172A]' : 'text-white'
+          }`}>
+            <Sparkles className={`w-5 h-5 ${isCream ? 'text-[#15803D]' : 'text-[#C6FF3D]'}`} />
             <span>TECHNOLOGY STACK USED</span>
           </h3>
           <div className="flex flex-wrap gap-3">
             {project.techStack.map((tech, tIdx) => (
               <div
                 key={tIdx}
-                className="px-5 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-xs font-heading font-semibold tracking-wider text-white uppercase hover:border-[#C6FF3D] transition-colors"
+                className={`px-5 py-2.5 rounded-xl text-xs font-heading font-semibold tracking-wider uppercase border transition-colors ${
+                  isCream
+                    ? 'bg-white/90 border-emerald-950/10 text-[#0F172A] hover:border-[#15803D]'
+                    : 'bg-white/[0.03] border-white/[0.08] text-white hover:border-[#C6FF3D]'
+                }`}
               >
                 {tech}
               </div>
@@ -295,12 +399,16 @@ export default function ProjectDetailPage() {
 
         {/* Screenshot Gallery */}
         {project.gallery && project.gallery.length > 0 && (
-          <section className="pt-12 border-t border-white/[0.08]">
+          <section className={`pt-12 border-t ${isCream ? 'border-black/[0.08]' : 'border-white/[0.08]'}`}>
             <div className="mb-10">
-              <span className="text-xs font-heading font-semibold uppercase tracking-[0.2em] text-[#C6FF3D] block mb-2">
+              <span className={`text-xs font-heading font-semibold uppercase tracking-[0.2em] block mb-2 ${
+                isCream ? 'text-[#15803D]' : 'text-[#C6FF3D]'
+              }`}>
                 04 // VISUAL PREVIEWS
               </span>
-              <h2 className="font-display font-bold text-2xl sm:text-3xl text-white uppercase">
+              <h2 className={`font-display font-bold text-2xl sm:text-3xl uppercase ${
+                isCream ? 'text-[#0F172A]' : 'text-white'
+              }`}>
                 INTERFACE GALLERY
               </h2>
             </div>
@@ -309,7 +417,11 @@ export default function ProjectDetailPage() {
               {project.gallery.map((imgUrl, gIdx) => (
                 <div
                   key={gIdx}
-                  className="rounded-2xl overflow-hidden bg-[#141414] border border-white/[0.08] aspect-[16/10] group"
+                  className={`rounded-2xl overflow-hidden border aspect-[16/10] group ${
+                    isCream
+                      ? 'bg-[#EFE9DF] border-emerald-950/10 shadow-sm'
+                      : 'bg-[#141414] border-white/[0.08]'
+                  }`}
                 >
                   <img
                     src={imgUrl}
@@ -325,9 +437,15 @@ export default function ProjectDetailPage() {
       </div>
 
       {/* Full-width "Next Project" CTA Section */}
-      <section className="border-t border-white/[0.08] bg-[#0A0A0A] py-20 px-4 sm:px-8">
+      <section className={`border-t py-20 px-4 sm:px-8 transition-colors duration-500 ${
+        isCream
+          ? 'bg-[#EFE9DF]/60 border-black/[0.08]'
+          : 'bg-[#0A0A0A] border-white/[0.08]'
+      }`}>
         <div className="max-w-6xl mx-auto">
-          <span className="text-xs font-heading font-semibold uppercase tracking-[0.25em] text-[#71717A] block mb-4">
+          <span className={`text-xs font-heading font-semibold uppercase tracking-[0.25em] block mb-4 ${
+            isCream ? 'text-[#64748B]' : 'text-[#71717A]'
+          }`}>
             NEXT CASE STUDY
           </span>
 
@@ -336,17 +454,31 @@ export default function ProjectDetailPage() {
             data-cursor="view"
             className="group block relative"
           >
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 py-6 border-b border-white/[0.08] group-hover:border-[#C6FF3D] transition-colors duration-300">
+            <div className={`flex flex-col md:flex-row md:items-center justify-between gap-6 py-6 border-b transition-colors duration-300 ${
+              isCream
+                ? 'border-black/[0.08] group-hover:border-[#15803D]'
+                : 'border-white/[0.08] group-hover:border-[#C6FF3D]'
+            }`}>
               <div>
-                <span className="font-display text-xs text-[#C6FF3D] uppercase tracking-widest block mb-2">
+                <span className={`font-display text-xs uppercase tracking-widest block mb-2 font-bold ${
+                  isCream ? 'text-[#15803D]' : 'text-[#C6FF3D]'
+                }`}>
                   PROJECT 0{nextProjectIndex + 1} // {nextProject.categoryLabel}
                 </span>
-                <h3 className="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl uppercase tracking-tight text-white group-hover:text-[#C6FF3D] transition-colors duration-300">
+                <h3 className={`font-display font-extrabold text-4xl sm:text-6xl md:text-7xl uppercase tracking-tight transition-colors duration-300 ${
+                  isCream
+                    ? 'text-[#0F172A] group-hover:text-[#15803D]'
+                    : 'text-white group-hover:text-[#C6FF3D]'
+                }`}>
                   {nextProject.title}
                 </h3>
               </div>
 
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/[0.05] group-hover:bg-[#C6FF3D] border border-white/[0.1] group-hover:border-[#C6FF3D] flex items-center justify-center text-white group-hover:text-[#050505] transition-all duration-300 transform group-hover:scale-110 shrink-0">
+              <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center transition-all duration-300 transform group-hover:scale-110 shrink-0 ${
+                isCream
+                  ? 'bg-black/[0.05] group-hover:bg-[#15803D] border border-black/10 group-hover:border-[#15803D] text-[#0F172A] group-hover:text-white'
+                  : 'bg-white/[0.05] group-hover:bg-[#C6FF3D] border border-white/[0.1] group-hover:border-[#C6FF3D] text-white group-hover:text-[#050505]'
+              }`}>
                 <ArrowUpRight className="w-8 h-8 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
               </div>
             </div>

@@ -1,63 +1,128 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { ArrowUpRight, FolderGit2, ExternalLink, Sparkles } from 'lucide-react';
+import {
+  ArrowUpRight,
+  FolderGit2,
+  ExternalLink,
+  Sparkles,
+  Layers,
+  Calendar,
+  User,
+  CheckCircle,
+  Eye
+} from 'lucide-react';
 import { projectsData } from '../data/content';
+import { useTheme } from '../context/ThemeContext';
 import MagneticButton from '../components/MagneticButton';
+import ProjectModal from '../components/ProjectModal';
 
 const CATEGORIES = ['All', 'Portals', 'Websites', 'Management Systems'];
 
 export default function ProjectsSection() {
   const [activeCategory, setActiveCategory] = useState('All');
+  const [modalProject, setModalProject] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isCream } = useTheme();
 
   const filteredProjects =
     activeCategory === 'All'
       ? projectsData
       : projectsData.filter((p) => p.category === activeCategory);
 
+  // Divide into Featured Flagship Project (index 0) and Remaining Showcase Grid
+  const featuredProject = filteredProjects[0];
+  const gridProjects = filteredProjects.slice(1);
+
+  const openProjectModal = (project) => {
+    setModalProject(project);
+    setIsModalOpen(true);
+  };
+
+  const handleNextModal = () => {
+    if (!modalProject) return;
+    const currentIndex = projectsData.findIndex((p) => p.id === modalProject.id);
+    const nextIndex = (currentIndex + 1) % projectsData.length;
+    setModalProject(projectsData[nextIndex]);
+  };
+
+  const handlePrevModal = () => {
+    if (!modalProject) return;
+    const currentIndex = projectsData.findIndex((p) => p.id === modalProject.id);
+    const prevIndex = (currentIndex - 1 + projectsData.length) % projectsData.length;
+    setModalProject(projectsData[prevIndex]);
+  };
+
   return (
     <section
       id="projects"
-      className="relative py-24 sm:py-36 px-4 sm:px-8 md:px-12 bg-[#050505] overflow-hidden"
+      className="relative py-24 sm:py-32 px-4 sm:px-8 md:px-12 bg-[var(--bg)] overflow-hidden transition-colors duration-500"
     >
       {/* Background Accent Radial Spotlight */}
-      <div className="absolute top-1/3 left-0 w-[600px] h-[600px] bg-[#C6FF3D]/4 rounded-full blur-[160px] pointer-events-none" />
+      <div
+        className={`absolute top-1/4 left-0 w-[600px] h-[600px] rounded-full blur-[160px] pointer-events-none ${
+          isCream ? 'bg-emerald-500/10' : 'bg-[#C6FF3D]/4'
+        }`}
+      />
 
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto relative z-10">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 pb-6 border-b border-white/[0.08]">
+        <div
+          className={`flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-14 pb-6 border-b ${
+            isCream ? 'border-black/10' : 'border-white/[0.08]'
+          }`}
+        >
           <div>
-            <div className="inline-flex items-center gap-2 text-xs font-heading font-semibold uppercase tracking-[0.2em] text-[#C6FF3D] mb-2">
+            <div
+              className={`inline-flex items-center gap-2 text-xs font-heading font-semibold uppercase tracking-[0.2em] mb-2 ${
+                isCream ? 'text-emerald-700' : 'text-[#C6FF3D]'
+              }`}
+            >
               <Sparkles className="w-3.5 h-3.5" />
               <span>03 // SELECTED PORTFOLIO</span>
             </div>
-            <h2 className="text-3xl sm:text-5xl md:text-6xl font-display font-extrabold tracking-tight text-white uppercase">
+            <h2
+              className={`text-3xl sm:text-5xl md:text-6xl font-display font-extrabold tracking-tight uppercase ${
+                isCream ? 'text-neutral-900' : 'text-white'
+              }`}
+            >
               CASE STUDIES & <br className="hidden sm:inline" />
               FEATURED CRAFT
             </h2>
           </div>
 
-          <p className="text-xs sm:text-sm font-heading text-[#71717A] uppercase tracking-wider mt-4 md:mt-0 max-w-xs md:text-right">
-            HIGH-THROUGHPUT WEB PORTALS & BESPOKE PLATFORMS
+          <p
+            className={`text-xs sm:text-sm font-heading uppercase tracking-wider mt-4 md:mt-0 max-w-xs md:text-right ${
+              isCream ? 'text-neutral-500' : 'text-[#71717A]'
+            }`}
+          >
+            CLICK ANY CARD TO VIEW IN-DEPTH ARCHITECTURE
           </p>
         </div>
 
         {/* Category Filter Tabs */}
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-14">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-12 sm:mb-16">
           {CATEGORIES.map((cat) => {
             const isActive = activeCategory === cat;
             return (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`relative px-5 py-2.5 rounded-full text-xs font-heading font-semibold uppercase tracking-wider transition-colors duration-300 ${
-                  isActive ? 'text-[#050505]' : 'text-[#A1A1AA] hover:text-white bg-white/[0.03]'
+                className={`relative px-4 sm:px-5 py-2.5 rounded-full text-xs font-heading font-semibold uppercase tracking-wider transition-all duration-300 ${
+                  isActive
+                    ? isCream
+                      ? 'text-white shadow-md'
+                      : 'text-[#050505] shadow-[0_0_20px_rgba(198,255,61,0.35)]'
+                    : isCream
+                    ? 'text-neutral-600 hover:text-black bg-black/5 hover:bg-black/10'
+                    : 'text-[#A1A1AA] hover:text-white bg-white/[0.03] hover:bg-white/[0.06]'
                 }`}
               >
                 {isActive && (
                   <motion.div
                     layoutId="projectFilterActive"
-                    className="absolute inset-0 bg-[#C6FF3D] rounded-full -z-10 shadow-[0_0_20px_rgba(198,255,61,0.35)]"
+                    className={`absolute inset-0 rounded-full -z-10 ${
+                      isCream ? 'bg-neutral-900' : 'bg-[#C6FF3D]'
+                    }`}
                     transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                   />
                 )}
@@ -67,139 +132,273 @@ export default function ProjectsSection() {
           })}
         </div>
 
-        {/* Projects Editorial Layout */}
-        <motion.div layout className="space-y-12 sm:space-y-16">
-          <AnimatePresence mode="popLayout">
-            {filteredProjects.map((project, idx) => {
-              // Alternate between full-width editorial hero card and split editorial
-              const isFullWidth = idx % 3 === 0;
-
-              return (
-                <motion.article
-                  layout
-                  initial={{ opacity: 0, y: 40 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                  key={project.id}
-                  className="group relative"
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeCategory}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.45 }}
+            className="space-y-12 sm:space-y-16"
+          >
+            {/* 1. HERO SPOTLIGHT FLAGSHIP PROJECT (Click to open rich modal) */}
+            {featuredProject && (
+              <motion.article
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="group relative cursor-pointer"
+                onClick={() => openProjectModal(featuredProject)}
+              >
+                <div
+                  data-cursor="view"
+                  className={`block rounded-3xl p-6 sm:p-10 md:p-12 transition-all duration-500 overflow-hidden relative border ${
+                    isCream
+                      ? 'bg-white/85 border-black/10 shadow-[0_20px_50px_rgba(0,0,0,0.06)] hover:border-emerald-600 backdrop-blur-2xl'
+                      : 'bg-[#0D0D0D]/95 border-white/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.8)] hover:border-[#C6FF3D]/50 backdrop-blur-2xl'
+                  }`}
                 >
-                  <Link
-                    to={`/projects/${project.slug}`}
-                    data-cursor="view"
-                    className="block rounded-3xl bg-[#0D0D0D]/90 border border-white/[0.08] group-hover:border-[#C6FF3D]/40 p-6 sm:p-10 transition-all duration-500 overflow-hidden shadow-2xl relative"
-                  >
-                    {/* Background Subtle Spotlight on Card Hover */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#C6FF3D]/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-center">
+                    {/* Visual Media Box */}
+                    <div className="lg:col-span-7 relative rounded-2xl overflow-hidden aspect-[16/10] bg-neutral-900">
+                      <img
+                        src={featuredProject.coverImage}
+                        alt={featuredProject.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                        loading="lazy"
+                      />
+                      <div className={`absolute inset-0 bg-gradient-to-t opacity-40 group-hover:opacity-20 transition-opacity ${
+                        isCream ? 'from-black/40 to-transparent' : 'from-[#050505] to-transparent'
+                      }`} />
 
-                    <div
-                      className={`grid gap-8 items-center ${
-                        isFullWidth
-                          ? 'grid-cols-1 lg:grid-cols-12'
-                          : 'grid-cols-1 lg:grid-cols-12'
-                      }`}
-                    >
-                      {/* Image Preview Container */}
-                      <div
-                        className={`relative rounded-2xl overflow-hidden bg-[#141414] aspect-[16/10] ${
-                          isFullWidth ? 'lg:col-span-7' : 'lg:col-span-6'
-                        }`}
-                      >
-                        <img
-                          src={project.coverImage}
-                          alt={project.title}
-                          className="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
-                          loading="lazy"
-                        />
-                        {/* Overlay Gradient */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/80 via-transparent to-transparent opacity-60" />
+                      {/* Floating Category Badge */}
+                      <div className="absolute top-4 left-4">
+                        <span className={`px-3 py-1.5 rounded-full text-[11px] font-heading font-bold uppercase tracking-wider backdrop-blur-md border ${
+                          isCream
+                            ? 'bg-white/90 border-black/10 text-emerald-800'
+                            : 'bg-black/80 border-white/20 text-[#C6FF3D]'
+                        }`}>
+                          FLAGSHIP CASE STUDY // {featuredProject.categoryLabel}
+                        </span>
+                      </div>
 
-                        {/* Floating Category Pill */}
-                        <div className="absolute top-4 left-4 px-3.5 py-1.5 rounded-full bg-[#050505]/80 backdrop-blur-md border border-white/[0.1] text-[11px] font-heading font-medium tracking-wider text-white uppercase flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#C6FF3D]" />
-                          {project.categoryLabel}
+                      {/* Interactive View Prompt */}
+                      <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-heading font-bold uppercase tracking-wider backdrop-blur-md shadow-lg ${
+                          isCream ? 'bg-neutral-900 text-white' : 'bg-[#C6FF3D] text-[#050505]'
+                        }`}>
+                          <Eye className="w-3.5 h-3.5" />
+                          <span>CLICK FOR FULL STUDY</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Metadata & Description Box */}
+                    <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
+                      <div>
+                        <div className={`flex items-center gap-2 text-xs font-mono font-bold mb-3 ${
+                          isCream ? 'text-emerald-700' : 'text-[#C6FF3D]'
+                        }`}>
+                          <span>PROJECT {featuredProject.index}</span>
+                          <span>•</span>
+                          <span>{featuredProject.year}</span>
                         </div>
 
-                        {/* View Case Study Pill on Mobile */}
-                        <div className="lg:hidden absolute bottom-4 right-4 px-3 py-1.5 rounded-full bg-[#C6FF3D] text-[#050505] font-heading font-bold text-xs uppercase tracking-wider flex items-center gap-1.5">
-                          <span>EXPLORE</span>
-                          <ArrowUpRight className="w-3.5 h-3.5" />
+                        <h3 className={`font-display font-black text-2xl sm:text-4xl uppercase tracking-tight mb-4 group-hover:translate-x-1 transition-transform ${
+                          isCream ? 'text-neutral-900 group-hover:text-emerald-700' : 'text-white group-hover:text-[#C6FF3D]'
+                        }`}>
+                          {featuredProject.title}
+                        </h3>
+
+                        <p className={`text-xs sm:text-sm font-heading leading-relaxed mb-6 ${
+                          isCream ? 'text-neutral-600' : 'text-[#A1A1AA]'
+                        }`}>
+                          {featuredProject.subtitle}
+                        </p>
+
+                        {/* Metrics Pills */}
+                        {featuredProject.metrics && featuredProject.metrics.length > 0 && (
+                          <div className="grid grid-cols-2 gap-3 mb-6">
+                            {featuredProject.metrics.slice(0, 2).map((metric, mIdx) => (
+                              <div
+                                key={mIdx}
+                                className={`p-3 rounded-xl border ${
+                                  isCream
+                                    ? 'bg-neutral-50/80 border-black/5'
+                                    : 'bg-white/[0.03] border-white/[0.06]'
+                                }`}
+                              >
+                                <div className={`font-display font-extrabold text-lg sm:text-xl ${
+                                  isCream ? 'text-emerald-800' : 'text-[#C6FF3D]'
+                                }`}>
+                                  {metric.value}
+                                </div>
+                                <div className={`text-[10px] font-heading uppercase tracking-wider ${
+                                  isCream ? 'text-neutral-500' : 'text-[#71717A]'
+                                }`}>
+                                  {metric.label}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Tech Stack Pills */}
+                        <div className="flex flex-wrap gap-2">
+                          {featuredProject.techStack.map((tech) => (
+                            <span
+                              key={tech}
+                              className={`text-[11px] font-mono px-2.5 py-1 rounded-lg border ${
+                                isCream
+                                  ? 'bg-neutral-100 border-neutral-200 text-neutral-800'
+                                  : 'bg-white/[0.04] border-white/[0.08] text-neutral-300'
+                              }`}
+                            >
+                              {tech}
+                            </span>
+                          ))}
                         </div>
                       </div>
 
-                      {/* Content Container */}
-                      <div
-                        className={`flex flex-col justify-between ${
-                          isFullWidth ? 'lg:col-span-5' : 'lg:col-span-6'
-                        }`}
-                      >
+                      {/* CTA Prompt */}
+                      <div className={`flex items-center gap-2 text-xs font-heading font-bold uppercase tracking-wider pt-2 ${
+                        isCream ? 'text-emerald-800' : 'text-[#C6FF3D]'
+                      }`}>
+                        <span>VIEW ARCHITECTURE & METRICS MODAL</span>
+                        <ArrowUpRight className="w-4 h-4 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.article>
+            )}
+
+            {/* 2. DYNAMIC 2-COLUMN RESPONSIVE GRID FOR REMAINING PROJECTS */}
+            {gridProjects.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10">
+                {gridProjects.map((project, idx) => (
+                  <motion.article
+                    key={project.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: idx * 0.12 }}
+                    className="group relative flex flex-col cursor-pointer"
+                    onClick={() => openProjectModal(project)}
+                  >
+                    <div
+                      data-cursor="view"
+                      className={`flex flex-col h-full rounded-3xl p-6 sm:p-8 transition-all duration-500 overflow-hidden relative border ${
+                        isCream
+                          ? 'bg-white/80 border-black/10 shadow-[0_15px_35px_rgba(0,0,0,0.05)] hover:border-emerald-600 hover:shadow-xl backdrop-blur-xl'
+                          : 'bg-[#0D0D0D]/90 border-white/[0.08] shadow-2xl hover:border-[#C6FF3D]/40 backdrop-blur-xl'
+                      }`}
+                    >
+                      {/* Image Frame */}
+                      <div className="relative rounded-2xl overflow-hidden aspect-[16/10] mb-6 bg-neutral-900">
+                        <img
+                          src={project.coverImage}
+                          alt={project.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                          loading="lazy"
+                        />
+                        <div className={`absolute inset-0 bg-gradient-to-t opacity-40 group-hover:opacity-20 transition-opacity ${
+                          isCream ? 'from-black/40 to-transparent' : 'from-[#050505] to-transparent'
+                        }`} />
+
+                        {/* Top Category Badge */}
+                        <div className="absolute top-3 left-3">
+                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-heading font-bold uppercase tracking-wider backdrop-blur-md border ${
+                            isCream
+                              ? 'bg-white/90 border-black/10 text-emerald-800'
+                              : 'bg-black/80 border-white/20 text-[#C6FF3D]'
+                          }`}>
+                            {project.categoryLabel}
+                          </span>
+                        </div>
+
+                        {/* Top Right Project Number */}
+                        <div className="absolute top-3 right-3">
+                          <span className="font-mono text-xs font-bold text-white px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-md">
+                            {project.index}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Content */}
+                      <div className="flex flex-col justify-between flex-grow">
                         <div>
-                          {/* Big Index Number & Year */}
-                          <div className="flex items-center justify-between mb-4">
-                            <span className="font-display font-black text-4xl sm:text-5xl text-white/20 group-hover:text-[#C6FF3D] transition-colors duration-300">
-                              {project.index}
-                            </span>
-                            <span className="text-xs font-heading font-semibold text-[#71717A] uppercase tracking-widest border border-white/[0.08] px-3 py-1 rounded-full">
-                              {project.year}
-                            </span>
+                          <div className={`text-xs font-heading font-semibold uppercase tracking-wider mb-2 ${
+                            isCream ? 'text-neutral-500' : 'text-[#71717A]'
+                          }`}>
+                            {project.client} // {project.year}
                           </div>
 
-                          {/* Title & Subtitle */}
-                          <h3 className="font-display font-extrabold text-2xl sm:text-3xl md:text-4xl text-white uppercase tracking-tight mb-2 group-hover:text-[#C6FF3D] transition-colors duration-300">
+                          <h4 className={`font-display font-extrabold text-xl sm:text-2xl uppercase tracking-tight mb-3 transition-colors ${
+                            isCream ? 'text-neutral-900 group-hover:text-emerald-700' : 'text-white group-hover:text-[#C6FF3D]'
+                          }`}>
                             {project.title}
-                          </h3>
+                          </h4>
 
-                          <p className="text-xs sm:text-sm font-heading font-medium text-[#C6FF3D]/90 uppercase tracking-wider mb-4">
+                          <p className={`text-xs sm:text-sm font-heading leading-relaxed mb-6 line-clamp-2 ${
+                            isCream ? 'text-neutral-600' : 'text-[#A1A1AA]'
+                          }`}>
                             {project.subtitle}
                           </p>
+                        </div>
 
-                          <p className="text-xs sm:text-sm text-[#A1A1AA] leading-relaxed line-clamp-3 mb-6">
-                            {project.overview}
-                          </p>
-
-                          {/* Metric Pill Highlight */}
-                          {project.metrics && project.metrics[0] && (
-                            <div className="mb-6 p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-between">
-                              <span className="text-xs font-heading uppercase tracking-wider text-[#71717A]">
-                                {project.metrics[0].label}
-                              </span>
-                              <span className="font-display font-bold text-base text-[#C6FF3D]">
-                                {project.metrics[0].value}
-                              </span>
-                            </div>
-                          )}
-
-                          {/* Tech Stack Chips */}
-                          <div className="flex flex-wrap gap-2 mb-8">
-                            {project.techStack.slice(0, 5).map((tech, tIdx) => (
+                        <div>
+                          {/* Tech stack row */}
+                          <div className="flex flex-wrap gap-1.5 mb-6">
+                            {project.techStack.slice(0, 4).map((tech) => (
                               <span
-                                key={tIdx}
-                                className="px-3 py-1 rounded-lg bg-white/[0.03] border border-white/[0.06] text-[11px] font-heading font-medium text-[#A1A1AA] group-hover:text-white group-hover:border-white/[0.12] transition-colors"
+                                key={tech}
+                                className={`text-[10px] font-mono px-2 py-0.5 rounded-md border ${
+                                  isCream
+                                    ? 'bg-neutral-100 border-neutral-200 text-neutral-800'
+                                    : 'bg-white/[0.04] border-white/[0.08] text-neutral-300'
+                                }`}
                               >
                                 {tech}
                               </span>
                             ))}
                           </div>
-                        </div>
 
-                        {/* Bottom Action Link */}
-                        <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between">
-                          <span className="text-xs font-heading font-semibold uppercase tracking-widest text-white group-hover:text-[#C6FF3D] transition-colors flex items-center gap-2">
-                            READ FULL CASE STUDY
-                          </span>
-                          <div className="w-10 h-10 rounded-full bg-white/[0.04] border border-white/[0.08] group-hover:bg-[#C6FF3D] group-hover:border-[#C6FF3D] flex items-center justify-center text-white group-hover:text-[#050505] transition-all duration-300 transform group-hover:scale-110">
-                            <ArrowUpRight className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                          {/* Bottom Card Action Footer */}
+                          <div className={`pt-4 border-t flex items-center justify-between text-xs font-heading font-bold uppercase tracking-wider ${
+                            isCream ? 'border-black/5 text-neutral-900' : 'border-white/[0.06] text-white'
+                          }`}>
+                            <span className={`group-hover:translate-x-1 transition-transform ${
+                              isCream ? 'group-hover:text-emerald-700' : 'group-hover:text-[#C6FF3D]'
+                            }`}>
+                              OPEN DETAILS MODAL
+                            </span>
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${
+                              isCream
+                                ? 'bg-black/5 group-hover:bg-emerald-700 group-hover:text-white'
+                                : 'bg-white/[0.06] group-hover:bg-[#C6FF3D] group-hover:text-[#050505]'
+                            }`}>
+                              <ArrowUpRight className="w-4 h-4 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </Link>
-                </motion.article>
-              );
-            })}
-          </AnimatePresence>
-        </motion.div>
+                  </motion.article>
+                ))}
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
       </div>
+
+      {/* In-Page Interactive Animated Project Detail Modal */}
+      <ProjectModal
+        project={modalProject}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onNext={handleNextModal}
+        onPrev={handlePrevModal}
+      />
     </section>
   );
 }

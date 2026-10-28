@@ -24,8 +24,8 @@ export const personalData = {
   availability: "Available for freelance & full-time roles",
   email: "vasugoyal536@gmail.com",
   phone: "+91 7850963027",
-  avatar: "/my_photo.png", // apni photo public/profile.jpg me daalein ya online link de sakte hain
-  resumeUrl: "#", // Replace with your direct PDF link or /resume.pdf
+  avatar: "/my_photo.png",
+  resumeUrl: "#",
   stats: [
     { number: "3.5+", label: "Years Experience", suffix: "" },
     { number: "15+", label: "Projects Shipped", suffix: "" },

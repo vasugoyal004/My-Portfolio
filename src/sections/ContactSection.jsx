@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import { personalData, contactData } from '../data/content';
+import { useTheme } from '../context/ThemeContext';
 import MagneticButton from '../components/MagneticButton';
 
 export default function ContactSection() {
@@ -24,6 +25,7 @@ export default function ContactSection() {
   const [status, setStatus] = useState('idle'); // 'idle' | 'loading' | 'success' | 'error'
   const [errorMessage, setErrorMessage] = useState('');
   const [copiedEmail, setCopiedEmail] = useState(false);
+  const { isCream } = useTheme();
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(personalData.email);
@@ -44,7 +46,6 @@ export default function ContactSection() {
     setErrorMessage('');
 
     try {
-      // Check if real EmailJS keys are provided
       if (
         contactData.emailPublicKey !== 'YOUR_EMAILJS_PUBLIC_KEY' &&
         contactData.emailServiceId !== 'service_portfolio'
@@ -61,7 +62,6 @@ export default function ContactSection() {
           contactData.emailPublicKey
         );
       } else {
-        // Realistic simulation fallback for testing
         await new Promise((resolve) => setTimeout(resolve, 1200));
       }
 
@@ -77,15 +77,27 @@ export default function ContactSection() {
   return (
     <section
       id="contact"
-      className="relative py-24 sm:py-36 px-4 sm:px-8 md:px-12 bg-[#050505] overflow-hidden"
+      className="relative py-20 sm:py-32 px-4 sm:px-8 md:px-12 bg-[var(--bg)] overflow-hidden transition-colors duration-500"
     >
       {/* Background Accent Glow */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#C6FF3D]/5 rounded-full blur-[200px] pointer-events-none" />
+      <div
+        className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full blur-[200px] pointer-events-none ${
+          isCream ? 'bg-emerald-500/10' : 'bg-[#C6FF3D]/5'
+        }`}
+      />
 
       <div className="max-w-6xl mx-auto">
         {/* Giant Heading with Masked Reveal */}
-        <div className="mb-16 sm:mb-24 pb-8 border-b border-white/[0.08]">
-          <div className="inline-flex items-center gap-2 text-xs font-heading font-semibold uppercase tracking-[0.2em] text-[#C6FF3D] mb-4">
+        <div
+          className={`mb-12 sm:mb-20 pb-6 sm:pb-8 border-b ${
+            isCream ? 'border-black/10' : 'border-white/[0.08]'
+          }`}
+        >
+          <div
+            className={`inline-flex items-center gap-2 text-xs font-heading font-semibold uppercase tracking-[0.2em] mb-4 ${
+              isCream ? 'text-emerald-700' : 'text-[#C6FF3D]'
+            }`}
+          >
             <Sparkles className="w-3.5 h-3.5" />
             <span>07 // START A CONVERSATION</span>
           </div>
@@ -96,23 +108,38 @@ export default function ContactSection() {
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="font-display font-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl uppercase tracking-tight text-white leading-[0.95]"
+              className={`font-display font-black text-4xl sm:text-6xl md:text-7xl lg:text-8xl uppercase tracking-tight leading-[0.95] ${
+                isCream ? 'text-neutral-900' : 'text-white'
+              }`}
             >
               LET'S BUILD <br />
-              <span className="text-[#C6FF3D] text-glow-accent">SOMETHING</span> AMAZING
+              <span className={isCream ? 'text-emerald-700' : 'text-[#C6FF3D] text-glow-accent'}>
+                SOMETHING
+              </span>{' '}
+              AMAZING
             </motion.h2>
           </div>
 
-          <p className="text-base sm:text-xl font-heading text-[#A1A1AA] max-w-2xl mt-6">
+          <p
+            className={`text-base sm:text-xl font-heading max-w-2xl mt-6 ${
+              isCream ? 'text-neutral-600' : 'text-[#A1A1AA]'
+            }`}
+          >
             {contactData.subheading}
           </p>
         </div>
 
         {/* Two-Column Grid: Form & Contact Info */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
           {/* LEFT: Contact Form */}
           <div className="lg:col-span-7">
-            <div className="p-8 sm:p-12 rounded-3xl bg-[#0D0D0D]/90 backdrop-blur-xl border border-white/[0.08] relative shadow-2xl">
+            <div
+              className={`p-6 sm:p-10 md:p-12 rounded-3xl border shadow-2xl relative transition-all duration-300 ${
+                isCream
+                  ? 'bg-white/85 border-black/10 shadow-[0_20px_50px_rgba(0,0,0,0.06)] backdrop-blur-xl'
+                  : 'bg-[#0D0D0D]/90 border-white/[0.08] backdrop-blur-xl'
+              }`}
+            >
               <AnimatePresence mode="wait">
                 {status === 'success' ? (
                   <motion.div
@@ -122,10 +149,16 @@ export default function ContactSection() {
                     exit={{ opacity: 0, scale: 0.95 }}
                     className="py-12 flex flex-col items-center text-center"
                   >
-                    {/* Animated Checkmark Draw */}
-                    <div className="w-20 h-20 rounded-full bg-[#C6FF3D]/10 border-2 border-[#C6FF3D] flex items-center justify-center text-[#C6FF3D] mb-6 shadow-[0_0_25px_rgba(198,255,61,0.4)]">
+                    {/* Animated Checkmark */}
+                    <div
+                      className={`w-20 h-20 rounded-full flex items-center justify-center mb-6 border-2 ${
+                        isCream
+                          ? 'bg-emerald-50 border-emerald-600 text-emerald-700 shadow-lg shadow-emerald-700/20'
+                          : 'bg-[#C6FF3D]/10 border-[#C6FF3D] text-[#C6FF3D] shadow-[0_0_25px_rgba(198,255,61,0.4)]'
+                      }`}
+                    >
                       <motion.svg
-                        className="w-10 h-10 text-[#C6FF3D]"
+                        className="w-10 h-10"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -142,22 +175,34 @@ export default function ContactSection() {
                       </motion.svg>
                     </div>
 
-                    <h3 className="font-display font-extrabold text-2xl sm:text-3xl text-white uppercase mb-2">
+                    <h3
+                      className={`font-display font-extrabold text-2xl sm:text-3xl uppercase mb-2 ${
+                        isCream ? 'text-neutral-900' : 'text-white'
+                      }`}
+                    >
                       MESSAGE RECEIVED!
                     </h3>
-                    <p className="text-sm font-heading text-[#A1A1AA] max-w-sm mb-8">
+                    <p
+                      className={`text-sm font-heading max-w-sm mb-8 ${
+                        isCream ? 'text-neutral-600' : 'text-[#A1A1AA]'
+                      }`}
+                    >
                       Thank you for reaching out. I will review your message and reply within 12 hours.
                     </p>
 
                     <button
                       onClick={() => setStatus('idle')}
-                      className="px-6 py-2.5 rounded-full bg-white/[0.06] hover:bg-white/[0.12] text-xs font-heading font-semibold uppercase tracking-wider text-white transition-colors"
+                      className={`px-6 py-2.5 rounded-full text-xs font-heading font-semibold uppercase tracking-wider transition-colors ${
+                        isCream
+                          ? 'bg-neutral-100 hover:bg-neutral-200 text-neutral-900'
+                          : 'bg-white/[0.06] hover:bg-white/[0.12] text-white'
+                      }`}
                     >
                       SEND ANOTHER MESSAGE
                     </button>
                   </motion.div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-8" key="form">
+                  <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8" key="form">
                     {/* Name Input with Floating Label */}
                     <div className="relative">
                       <input
@@ -168,21 +213,29 @@ export default function ContactSection() {
                         onFocus={() => setFocusedField('name')}
                         onBlur={() => setFocusedField(null)}
                         required
-                        className="w-full bg-transparent text-white pt-6 pb-2 text-base font-heading focus:outline-none border-b border-white/[0.1] peer"
+                        className={`w-full bg-transparent pt-6 pb-2 text-base font-heading focus:outline-none border-b transition-colors peer ${
+                          isCream
+                            ? 'text-neutral-900 border-black/10'
+                            : 'text-white border-white/[0.1]'
+                        }`}
                       />
                       <label
                         htmlFor="name"
                         className={`absolute left-0 text-xs font-heading uppercase tracking-widest transition-all duration-200 pointer-events-none ${
                           focusedField === 'name' || formData.name
-                            ? 'top-0 text-[#C6FF3D]'
+                            ? isCream
+                              ? 'top-0 text-emerald-700 font-semibold'
+                              : 'top-0 text-[#C6FF3D]'
                             : 'top-4 text-[#71717A]'
                         }`}
                       >
                         YOUR NAME
                       </label>
                       <div
-                        className={`h-[2px] bg-[#C6FF3D] transition-all duration-300 ${
-                          focusedField === 'name' ? 'w-full shadow-[0_0_8px_#C6FF3D]' : 'w-0'
+                        className={`h-[2px] transition-all duration-300 ${
+                          isCream ? 'bg-emerald-700' : 'bg-[#C6FF3D]'
+                        } ${
+                          focusedField === 'name' ? 'w-full shadow-sm' : 'w-0'
                         }`}
                       />
                     </div>
@@ -197,21 +250,29 @@ export default function ContactSection() {
                         onFocus={() => setFocusedField('email')}
                         onBlur={() => setFocusedField(null)}
                         required
-                        className="w-full bg-transparent text-white pt-6 pb-2 text-base font-heading focus:outline-none border-b border-white/[0.1] peer"
+                        className={`w-full bg-transparent pt-6 pb-2 text-base font-heading focus:outline-none border-b transition-colors peer ${
+                          isCream
+                            ? 'text-neutral-900 border-black/10'
+                            : 'text-white border-white/[0.1]'
+                        }`}
                       />
                       <label
                         htmlFor="email"
                         className={`absolute left-0 text-xs font-heading uppercase tracking-widest transition-all duration-200 pointer-events-none ${
                           focusedField === 'email' || formData.email
-                            ? 'top-0 text-[#C6FF3D]'
+                            ? isCream
+                              ? 'top-0 text-emerald-700 font-semibold'
+                              : 'top-0 text-[#C6FF3D]'
                             : 'top-4 text-[#71717A]'
                         }`}
                       >
                         EMAIL ADDRESS
                       </label>
                       <div
-                        className={`h-[2px] bg-[#C6FF3D] transition-all duration-300 ${
-                          focusedField === 'email' ? 'w-full shadow-[0_0_8px_#C6FF3D]' : 'w-0'
+                        className={`h-[2px] transition-all duration-300 ${
+                          isCream ? 'bg-emerald-700' : 'bg-[#C6FF3D]'
+                        } ${
+                          focusedField === 'email' ? 'w-full shadow-sm' : 'w-0'
                         }`}
                       />
                     </div>
@@ -226,27 +287,35 @@ export default function ContactSection() {
                         onFocus={() => setFocusedField('message')}
                         onBlur={() => setFocusedField(null)}
                         required
-                        className="w-full bg-transparent text-white pt-6 pb-2 text-base font-heading focus:outline-none border-b border-white/[0.1] peer resize-none"
+                        className={`w-full bg-transparent pt-6 pb-2 text-base font-heading focus:outline-none border-b transition-colors peer resize-none ${
+                          isCream
+                            ? 'text-neutral-900 border-black/10'
+                            : 'text-white border-white/[0.1]'
+                        }`}
                       />
                       <label
                         htmlFor="message"
                         className={`absolute left-0 text-xs font-heading uppercase tracking-widest transition-all duration-200 pointer-events-none ${
                           focusedField === 'message' || formData.message
-                            ? 'top-0 text-[#C6FF3D]'
+                            ? isCream
+                              ? 'top-0 text-emerald-700 font-semibold'
+                              : 'top-0 text-[#C6FF3D]'
                             : 'top-4 text-[#71717A]'
                         }`}
                       >
                         PROJECT DETAILS / MESSAGE
                       </label>
                       <div
-                        className={`h-[2px] bg-[#C6FF3D] transition-all duration-300 ${
-                          focusedField === 'message' ? 'w-full shadow-[0_0_8px_#C6FF3D]' : 'w-0'
+                        className={`h-[2px] transition-all duration-300 ${
+                          isCream ? 'bg-emerald-700' : 'bg-[#C6FF3D]'
+                        } ${
+                          focusedField === 'message' ? 'w-full shadow-sm' : 'w-0'
                         }`}
                       />
                     </div>
 
                     {errorMessage && (
-                      <p className="text-xs text-red-400 font-heading">{errorMessage}</p>
+                      <p className="text-xs text-red-500 font-heading">{errorMessage}</p>
                     )}
 
                     {/* Submit Button */}
@@ -254,7 +323,11 @@ export default function ContactSection() {
                       <button
                         type="submit"
                         disabled={status === 'loading'}
-                        className="w-full py-4 rounded-full bg-[#C6FF3D] hover:bg-[#B5F22B] text-[#050505] font-heading font-bold text-xs uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(198,255,61,0.35)] disabled:opacity-60"
+                        className={`w-full py-4 rounded-full font-heading font-bold text-xs uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-60 ${
+                          isCream
+                            ? 'bg-emerald-700 hover:bg-emerald-800 text-white shadow-lg shadow-emerald-700/20'
+                            : 'bg-[#C6FF3D] hover:bg-[#B5F22B] text-[#050505] shadow-[0_0_25px_rgba(198,255,61,0.35)]'
+                        }`}
                       >
                         {status === 'loading' ? (
                           <>
@@ -276,109 +349,224 @@ export default function ContactSection() {
           </div>
 
           {/* RIGHT: Direct Contact Details & Quick Links */}
-          <div className="lg:col-span-5 flex flex-col justify-between space-y-8">
-            {/* Direct Cards */}
+          <div className="lg:col-span-5 flex flex-col justify-between space-y-6 sm:space-y-8">
             <div className="space-y-4">
               {/* Email Card with Copy Button */}
-              <div className="p-6 rounded-2xl bg-[#0D0D0D] border border-white/[0.08] relative group hover:border-[#C6FF3D]/40 transition-colors">
+              <div
+                className={`p-6 rounded-2xl border transition-colors ${
+                  isCream
+                    ? 'bg-white/80 border-black/10 shadow-sm hover:border-emerald-600'
+                    : 'bg-[#0D0D0D] border-white/[0.08] hover:border-[#C6FF3D]/40'
+                }`}
+              >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[11px] font-heading uppercase tracking-wider text-[#71717A] flex items-center gap-1.5">
-                    <Mail className="w-3.5 h-3.5 text-[#C6FF3D]" />
+                  <span
+                    className={`text-[11px] font-heading uppercase tracking-wider flex items-center gap-1.5 ${
+                      isCream ? 'text-neutral-500' : 'text-[#71717A]'
+                    }`}
+                  >
+                    <Mail
+                      className={`w-3.5 h-3.5 ${
+                        isCream ? 'text-emerald-700' : 'text-[#C6FF3D]'
+                      }`}
+                    />
                     <span>DIRECT INBOX</span>
                   </span>
 
                   <button
                     onClick={handleCopyEmail}
-                    className="p-1.5 rounded-lg bg-white/[0.04] hover:bg-[#C6FF3D] text-[#A1A1AA] hover:text-[#050505] transition-all"
+                    className={`p-1.5 rounded-lg transition-all ${
+                      isCream
+                        ? 'bg-black/5 hover:bg-emerald-700 text-neutral-600 hover:text-white'
+                        : 'bg-white/[0.04] hover:bg-[#C6FF3D] text-[#A1A1AA] hover:text-[#050505]'
+                    }`}
                     title="Copy Email"
                   >
-                    {copiedEmail ? <Check className="w-4 h-4 text-[#C6FF3D]" /> : <Copy className="w-4 h-4" />}
+                    {copiedEmail ? (
+                      <Check className={`w-4 h-4 ${isCream ? 'text-emerald-700' : 'text-[#C6FF3D]'}`} />
+                    ) : (
+                      <Copy className="w-4 h-4" />
+                    )}
                   </button>
                 </div>
 
                 <a
                   href={`mailto:${personalData.email}`}
-                  className="font-display font-bold text-lg sm:text-xl text-white group-hover:text-[#C6FF3D] transition-colors break-all"
+                  className={`font-display font-bold text-lg sm:text-xl break-all transition-colors ${
+                    isCream
+                      ? 'text-neutral-900 hover:text-emerald-700'
+                      : 'text-white hover:text-[#C6FF3D]'
+                  }`}
                 >
                   {personalData.email}
                 </a>
 
                 {copiedEmail && (
-                  <p className="text-[11px] text-[#C6FF3D] font-heading mt-2 flex items-center gap-1">
+                  <p
+                    className={`text-[11px] font-heading mt-2 flex items-center gap-1 ${
+                      isCream ? 'text-emerald-700' : 'text-[#C6FF3D]'
+                    }`}
+                  >
                     <Check className="w-3 h-3" /> Email address copied to clipboard!
                   </p>
                 )}
               </div>
 
               {/* Phone Card */}
-              <div className="p-6 rounded-2xl bg-[#0D0D0D] border border-white/[0.08] relative group hover:border-[#C6FF3D]/40 transition-colors">
-                <span className="text-[11px] font-heading uppercase tracking-wider text-[#71717A] flex items-center gap-1.5 mb-2">
-                  <Phone className="w-3.5 h-3.5 text-[#C6FF3D]" />
+              <div
+                className={`p-6 rounded-2xl border transition-colors ${
+                  isCream
+                    ? 'bg-white/80 border-black/10 shadow-sm hover:border-emerald-600'
+                    : 'bg-[#0D0D0D] border-white/[0.08] hover:border-[#C6FF3D]/40'
+                }`}
+              >
+                <span
+                  className={`text-[11px] font-heading uppercase tracking-wider flex items-center gap-1.5 mb-2 ${
+                    isCream ? 'text-neutral-500' : 'text-[#71717A]'
+                  }`}
+                >
+                  <Phone
+                    className={`w-3.5 h-3.5 ${
+                      isCream ? 'text-emerald-700' : 'text-[#C6FF3D]'
+                    }`}
+                  />
                   <span>DIRECT CALL / WHATSAPP</span>
                 </span>
                 <a
                   href={`tel:${personalData.phone}`}
-                  className="font-display font-bold text-lg sm:text-xl text-white group-hover:text-[#C6FF3D] transition-colors"
+                  className={`font-display font-bold text-lg sm:text-xl transition-colors ${
+                    isCream
+                      ? 'text-neutral-900 hover:text-emerald-700'
+                      : 'text-white hover:text-[#C6FF3D]'
+                  }`}
                 >
                   {personalData.phone}
                 </a>
               </div>
 
               {/* Socials Grid */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <a
                   href="https://linkedin.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-5 rounded-2xl bg-[#0D0D0D] border border-white/[0.08] hover:border-[#C6FF3D]/40 flex items-center justify-between group transition-colors"
+                  className={`p-4 sm:p-5 rounded-2xl border flex items-center justify-between group transition-colors ${
+                    isCream
+                      ? 'bg-white/80 border-black/10 hover:border-emerald-700 shadow-sm'
+                      : 'bg-[#0D0D0D] border-white/[0.08] hover:border-[#C6FF3D]/40'
+                  }`}
                 >
-                  <span className="font-heading font-semibold text-xs text-white uppercase flex items-center gap-2">
-                    <Linkedin className="w-4 h-4 text-[#C6FF3D]" />
+                  <span
+                    className={`font-heading font-semibold text-xs uppercase flex items-center gap-2 ${
+                      isCream ? 'text-neutral-900' : 'text-white'
+                    }`}
+                  >
+                    <Linkedin
+                      className={`w-4 h-4 ${
+                        isCream ? 'text-emerald-700' : 'text-[#C6FF3D]'
+                      }`}
+                    />
                     <span>LINKEDIN</span>
                   </span>
-                  <ArrowUpRight className="w-4 h-4 text-[#71717A] group-hover:text-[#C6FF3D] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                  <ArrowUpRight
+                    className={`w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all ${
+                      isCream ? 'text-neutral-400 group-hover:text-emerald-700' : 'text-[#71717A] group-hover:text-[#C6FF3D]'
+                    }`}
+                  />
                 </a>
 
                 <a
                   href="https://github.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-5 rounded-2xl bg-[#0D0D0D] border border-white/[0.08] hover:border-[#C6FF3D]/40 flex items-center justify-between group transition-colors"
+                  className={`p-4 sm:p-5 rounded-2xl border flex items-center justify-between group transition-colors ${
+                    isCream
+                      ? 'bg-white/80 border-black/10 hover:border-emerald-700 shadow-sm'
+                      : 'bg-[#0D0D0D] border-white/[0.08] hover:border-[#C6FF3D]/40'
+                  }`}
                 >
-                  <span className="font-heading font-semibold text-xs text-white uppercase flex items-center gap-2">
-                    <Github className="w-4 h-4 text-[#C6FF3D]" />
+                  <span
+                    className={`font-heading font-semibold text-xs uppercase flex items-center gap-2 ${
+                      isCream ? 'text-neutral-900' : 'text-white'
+                    }`}
+                  >
+                    <Github
+                      className={`w-4 h-4 ${
+                        isCream ? 'text-emerald-700' : 'text-[#C6FF3D]'
+                      }`}
+                    />
                     <span>GITHUB</span>
                   </span>
-                  <ArrowUpRight className="w-4 h-4 text-[#71717A] group-hover:text-[#C6FF3D] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                  <ArrowUpRight
+                    className={`w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all ${
+                      isCream ? 'text-neutral-400 group-hover:text-emerald-700' : 'text-[#71717A] group-hover:text-[#C6FF3D]'
+                    }`}
+                  />
                 </a>
               </div>
             </div>
 
-            {/* Availability & Response Time Card */}
-            <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-4">
+            {/* Developer Avatar Badge & Availability */}
+            <div
+              className={`p-5 sm:p-6 rounded-2xl border space-y-4 ${
+                isCream
+                  ? 'bg-white/90 border-black/5 shadow-sm'
+                  : 'bg-white/[0.02] border-white/[0.06]'
+              }`}
+            >
               <div className="flex items-center gap-3.5">
                 <img
-                  src={personalData.avatar}
+                  src={personalData.avatar || "/my_photo.png"}
                   alt={personalData.name}
-                  className="w-12 h-12 rounded-full object-cover object-top border-2 border-[#C6FF3D]"
+                  className={`w-12 h-12 rounded-full object-cover object-top border-2 ${
+                    isCream ? 'border-emerald-600' : 'border-[#C6FF3D]'
+                  }`}
                 />
                 <div>
-                  <div className="font-display font-bold text-sm text-white">
+                  <div
+                    className={`font-display font-bold text-sm ${
+                      isCream ? 'text-neutral-900' : 'text-white'
+                    }`}
+                  >
                     {personalData.name}
                   </div>
-                  <div className="text-[11px] font-heading text-[#C6FF3D] flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#C6FF3D] animate-ping" />
+                  <div
+                    className={`text-[11px] font-heading flex items-center gap-1.5 ${
+                      isCream ? 'text-emerald-700 font-semibold' : 'text-[#C6FF3D]'
+                    }`}
+                  >
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full animate-ping ${
+                        isCream ? 'bg-emerald-600' : 'bg-[#C6FF3D]'
+                      }`}
+                    />
                     <span>{personalData.availability}</span>
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-2 text-xs font-heading text-[#71717A]">
-                <Clock className="w-3.5 h-3.5 text-[#C6FF3D]" />
+              <div
+                className={`flex items-center gap-2 text-xs font-heading ${
+                  isCream ? 'text-neutral-500' : 'text-[#71717A]'
+                }`}
+              >
+                <Clock
+                  className={`w-3.5 h-3.5 ${
+                    isCream ? 'text-emerald-700' : 'text-[#C6FF3D]'
+                  }`}
+                />
                 <span>Response Time: {contactData.typicalResponseTime}</span>
               </div>
-              <div className="flex items-center gap-2 text-xs font-heading text-[#71717A]">
-                <MapPin className="w-3.5 h-3.5 text-[#C6FF3D]" />
-                <span>Location: {contactData.officeLocation}</span>
+              <div
+                className={`flex items-center gap-2 text-xs font-heading ${
+                  isCream ? 'text-neutral-500' : 'text-[#71717A]'
+                }`}
+              >
+                <MapPin
+                  className={`w-3.5 h-3.5 ${
+                    isCream ? 'text-emerald-700' : 'text-[#C6FF3D]'
+                  }`}
+                />
+                <span>Location: {personalData.location}</span>
               </div>
             </div>
           </div>

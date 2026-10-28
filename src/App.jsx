@@ -9,6 +9,7 @@ import Preloader from './components/Preloader';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import PageTransition from './components/PageTransition';
+import { ThemeProvider } from './context/ThemeContext';
 
 // Homepage Sections (Eagerly loaded for instant first paint)
 import HeroSection from './sections/HeroSection';
@@ -88,24 +89,25 @@ export default function App() {
   const [preloaderComplete, setPreloaderComplete] = useState(false);
 
   return (
-    <Router>
-      <SmoothScroll>
-        <div className="relative min-h-screen bg-[#050505] text-white selection:bg-[#C6FF3D] selection:text-[#050505]">
-          {/* Subtle Film Grain Noise Texture */}
-          <div className="bg-noise" />
+    <ThemeProvider>
+      <Router>
+        <SmoothScroll>
+          <div className="relative min-h-screen bg-[var(--bg)] text-[var(--text-primary)] selection:bg-[var(--accent)] selection:text-[var(--bg)] transition-colors duration-500">
+            {/* Subtle Film Grain Noise Texture */}
+            <div className="bg-noise" />
 
-          {/* Preloader */}
-          <Preloader onComplete={() => setPreloaderComplete(true)} />
+            {/* Preloader */}
+            <Preloader onComplete={() => setPreloaderComplete(true)} />
 
-          {/* Global Interactive Overlays & Navigation */}
-          <CustomCursor />
-          <ScrollProgressBar />
-          <Navbar />
+            {/* Global Interactive Overlays & Navigation */}
+            <ScrollProgressBar />
+            <Navbar />
 
-          {/* Animated Route View */}
-          <AnimatedRoutes preloaderComplete={preloaderComplete} />
-        </div>
-      </SmoothScroll>
-    </Router>
+            {/* Animated Route View */}
+            <AnimatedRoutes preloaderComplete={preloaderComplete} />
+          </div>
+        </SmoothScroll>
+      </Router>
+    </ThemeProvider>
   );
 }

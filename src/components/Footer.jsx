@@ -3,9 +3,11 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowUp, Github, Linkedin, Mail, Twitter, Heart } from 'lucide-react';
 import { personalData } from '../data/content';
 import MagneticButton from './MagneticButton';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Footer() {
   const [scrollPercent, setScrollPercent] = useState(0);
+  const { isCream } = useTheme();
 
   // Scroll Progress computation for the Back to Top circle ring
   useEffect(() => {
@@ -27,18 +29,28 @@ export default function Footer() {
   const strokeDashoffset = circumference - (scrollPercent / 100) * circumference;
 
   return (
-    <footer className="relative bg-[#050505] border-t border-white/[0.08] overflow-hidden select-none">
+    <footer className={`relative transition-colors duration-500 overflow-hidden select-none border-t ${
+      isCream
+        ? 'bg-[#FAF7F2] border-emerald-950/10'
+        : 'bg-[#050505] border-white/[0.08]'
+    }`}>
       {/* 1. Scrolling Marquee Strip Above Footer */}
-      <div className="py-4 bg-[#0D0D0D] border-b border-white/[0.06] overflow-hidden flex whitespace-nowrap">
-        <div className="animate-marquee flex gap-8 items-center font-heading text-xs uppercase tracking-[0.25em] text-[#C6FF3D] font-bold">
+      <div className={`py-4 border-b overflow-hidden flex whitespace-nowrap transition-colors duration-500 ${
+        isCream
+          ? 'bg-[#EFE9DF]/80 border-emerald-950/10'
+          : 'bg-[#0D0D0D] border-white/[0.06]'
+      }`}>
+        <div className={`animate-marquee flex gap-8 items-center font-heading text-xs uppercase tracking-[0.25em] font-bold ${
+          isCream ? 'text-[#15803D]' : 'text-[#C6FF3D]'
+        }`}>
           {[...Array(6)].map((_, i) => (
             <span key={i} className="flex items-center gap-6">
               <span>AVAILABLE FOR FREELANCE & FULL-TIME</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C6FF3D]" />
+              <span className={`w-1.5 h-1.5 rounded-full ${isCream ? 'bg-[#15803D]' : 'bg-[#C6FF3D]'}`} />
               <span>LET'S WORK TOGETHER</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C6FF3D]" />
+              <span className={`w-1.5 h-1.5 rounded-full ${isCream ? 'bg-[#15803D]' : 'bg-[#C6FF3D]'}`} />
               <span>CRAFTING THE MODERN WEB</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C6FF3D]" />
+              <span className={`w-1.5 h-1.5 rounded-full ${isCream ? 'bg-[#15803D]' : 'bg-[#C6FF3D]'}`} />
             </span>
           ))}
         </div>
@@ -46,19 +58,27 @@ export default function Footer() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-8 pt-16 sm:pt-24 pb-12">
         {/* Main Footer Row */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 pb-16 border-b border-white/[0.08]">
+        <div className={`grid grid-cols-1 md:grid-cols-12 gap-12 pb-16 border-b ${
+          isCream ? 'border-black/[0.08]' : 'border-white/[0.08]'
+        }`}>
           {/* Col 1: Bio & Mission */}
           <div className="md:col-span-5 space-y-4">
-            <span className="font-display font-extrabold text-2xl sm:text-3xl tracking-tight text-white flex items-center gap-1.5">
+            <span className={`font-display font-extrabold text-2xl sm:text-3xl tracking-tight flex items-center gap-1.5 ${
+              isCream ? 'text-[#0F172A]' : 'text-white'
+            }`}>
               <span>VASU GOYAL</span>
-              <span className="w-2 h-2 rounded-full bg-[#C6FF3D]" />
+              <span className={`w-2 h-2 rounded-full ${isCream ? 'bg-[#15803D]' : 'bg-[#C6FF3D]'}`} />
             </span>
-            <p className="text-xs sm:text-sm text-[#A1A1AA] leading-relaxed max-w-sm font-heading">
+            <p className={`text-xs sm:text-sm leading-relaxed max-w-sm font-heading ${
+              isCream ? 'text-[#475569]' : 'text-[#A1A1AA]'
+            }`}>
               Full-Stack Software Developer dedicated to engineering resilient, scalable web portals and high-impact digital experiences.
             </p>
             <div className="pt-2">
-              <span className="inline-flex items-center gap-2 text-xs font-heading text-[#71717A] uppercase tracking-wider">
-                <span className="w-2 h-2 rounded-full bg-[#C6FF3D]" />
+              <span className={`inline-flex items-center gap-2 text-xs font-heading uppercase tracking-wider ${
+                isCream ? 'text-[#64748B]' : 'text-[#71717A]'
+              }`}>
+                <span className={`w-2 h-2 rounded-full ${isCream ? 'bg-[#15803D]' : 'bg-[#C6FF3D]'}`} />
                 Based in India // Available Worldwide
               </span>
             </div>
@@ -66,15 +86,21 @@ export default function Footer() {
 
           {/* Col 2: Navigation Links */}
           <div className="md:col-span-3">
-            <h4 className="font-heading font-semibold text-xs uppercase tracking-widest text-[#71717A] mb-4">
+            <h4 className={`font-heading font-semibold text-xs uppercase tracking-widest mb-4 ${
+              isCream ? 'text-[#64748B]' : 'text-[#71717A]'
+            }`}>
               NAVIGATION
             </h4>
-            <ul className="space-y-2.5 text-xs font-heading font-medium text-[#A1A1AA] uppercase">
+            <ul className={`space-y-2.5 text-xs font-heading font-medium uppercase ${
+              isCream ? 'text-[#334155]' : 'text-[#A1A1AA]'
+            }`}>
               {['about', 'skills', 'projects', 'experience', 'services', 'contact'].map((sec) => (
                 <li key={sec}>
                   <a
                     href={`/#${sec}`}
-                    className="hover:text-[#C6FF3D] transition-colors flex items-center gap-1.5"
+                    className={`transition-colors flex items-center gap-1.5 ${
+                      isCream ? 'hover:text-[#15803D]' : 'hover:text-[#C6FF3D]'
+                    }`}
                   >
                     <span>{sec}</span>
                   </a>
@@ -86,7 +112,9 @@ export default function Footer() {
           {/* Col 3: Social Links & Contact */}
           <div className="md:col-span-4 flex flex-col justify-between">
             <div>
-              <h4 className="font-heading font-semibold text-xs uppercase tracking-widest text-[#71717A] mb-4">
+              <h4 className={`font-heading font-semibold text-xs uppercase tracking-widest mb-4 ${
+                isCream ? 'text-[#64748B]' : 'text-[#71717A]'
+              }`}>
                 CONNECT & NETWORK
               </h4>
               <div className="flex flex-wrap gap-3">
@@ -96,7 +124,11 @@ export default function Footer() {
                       href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-10 h-10 rounded-full bg-white/[0.04] hover:bg-[#C6FF3D] border border-white/[0.08] hover:border-[#C6FF3D] flex items-center justify-center text-white hover:text-[#050505] transition-all"
+                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                        isCream
+                          ? 'bg-black/[0.04] hover:bg-[#15803D] border border-black/[0.08] hover:border-[#15803D] text-[#0F172A] hover:text-white'
+                          : 'bg-white/[0.04] hover:bg-[#C6FF3D] border border-white/[0.08] hover:border-[#C6FF3D] text-white hover:text-[#050505]'
+                      }`}
                       aria-label={social.name}
                     >
                       {social.name === 'Github' && <Github className="w-4 h-4" />}
@@ -123,7 +155,7 @@ export default function Footer() {
                       cx="28"
                       cy="28"
                       r="22"
-                      stroke="rgba(255, 255, 255, 0.1)"
+                      stroke={isCream ? "rgba(0, 0, 0, 0.1)" : "rgba(255, 255, 255, 0.1)"}
                       strokeWidth="2.5"
                       fill="transparent"
                     />
@@ -131,7 +163,7 @@ export default function Footer() {
                       cx="28"
                       cy="28"
                       r="22"
-                      stroke="#C6FF3D"
+                      stroke={isCream ? "#15803D" : "#C6FF3D"}
                       strokeWidth="2.5"
                       fill="transparent"
                       strokeDasharray={circumference}
@@ -140,7 +172,11 @@ export default function Footer() {
                       className="transition-all duration-150"
                     />
                   </svg>
-                  <ArrowUp className="w-5 h-5 text-white group-hover:text-[#C6FF3D] absolute group-hover:-translate-y-1 transition-all" />
+                  <ArrowUp className={`w-5 h-5 absolute group-hover:-translate-y-1 transition-all ${
+                    isCream
+                      ? 'text-[#0F172A] group-hover:text-[#15803D]'
+                      : 'text-white group-hover:text-[#C6FF3D]'
+                  }`} />
                 </button>
               </MagneticButton>
             </div>
@@ -148,25 +184,35 @@ export default function Footer() {
         </div>
 
         {/* 2. Massive "VASU GOYAL" Parallax Wordmark */}
-        <div className="py-8 sm:py-14 overflow-hidden border-b border-white/[0.08] text-center">
+        <div className={`py-8 sm:py-14 overflow-hidden border-b text-center ${
+          isCream ? 'border-black/[0.08]' : 'border-white/[0.08]'
+        }`}>
           <motion.h2
             initial={{ opacity: 0.2 }}
             whileInView={{ opacity: 0.9 }}
             viewport={{ once: true }}
-            className="font-display font-black text-[clamp(2.5rem,11vw,11rem)] leading-none text-transparent bg-clip-text bg-gradient-to-b from-white/90 via-white/40 to-white/5 uppercase tracking-tighter select-none"
+            className={`font-display font-black text-[clamp(2.5rem,11vw,11rem)] leading-none text-transparent bg-clip-text uppercase tracking-tighter select-none ${
+              isCream
+                ? 'bg-gradient-to-b from-slate-900 via-slate-600/60 to-slate-400/20'
+                : 'bg-gradient-to-b from-white/90 via-white/40 to-white/5'
+            }`}
           >
             VASU GOYAL
           </motion.h2>
         </div>
 
         {/* Bottom Copyright & Tech Stack Credits */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-heading text-[#71717A]">
+        <div className={`pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-heading ${
+          isCream ? 'text-[#64748B]' : 'text-[#71717A]'
+        }`}>
           <div>
             © 2026 {personalData.name}. All rights reserved.
           </div>
           <div className="flex items-center gap-1.5">
             <span>Built with precision in</span>
-            <span className="text-white font-medium">React, GSAP & Three.js</span>
+            <span className={`font-medium ${isCream ? 'text-[#0F172A]' : 'text-white'}`}>
+              React, GSAP & Three.js
+            </span>
           </div>
         </div>
       </div>

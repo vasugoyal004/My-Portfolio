@@ -19,6 +19,7 @@ import {
   SiPostman
 } from 'react-icons/si';
 import { TbApi } from 'react-icons/tb';
+import { useTheme } from '../context/ThemeContext';
 
 const row1 = [
   { name: 'React', icon: SiReact },
@@ -47,6 +48,7 @@ const row2 = [
 export default function TechMarquee() {
   const marquee1Ref = useRef(null);
   const marquee2Ref = useRef(null);
+  const { isCream } = useTheme();
 
   // Dynamic scroll velocity reaction
   useEffect(() => {
@@ -84,13 +86,17 @@ export default function TechMarquee() {
   }, []);
 
   return (
-    <section className="relative py-16 sm:py-24 bg-[#050505] overflow-hidden border-y border-white/[0.06] select-none">
+    <section className="relative py-14 sm:py-20 bg-[var(--bg)] overflow-hidden border-y border-[var(--border)] select-none transition-colors duration-500">
       {/* Background Subtle Gradient Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-28 bg-[#C6FF3D]/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-28 rounded-full blur-[100px] pointer-events-none ${
+        isCream ? 'bg-emerald-500/10' : 'bg-[#C6FF3D]/5'
+      }`} />
 
       {/* Section Sub-label */}
-      <div className="text-center mb-10">
-        <span className="text-[11px] font-heading font-semibold uppercase tracking-[0.25em] text-[#71717A]">
+      <div className="text-center mb-8">
+        <span className={`text-[11px] font-heading font-semibold uppercase tracking-[0.25em] ${
+          isCream ? 'text-neutral-500' : 'text-[#71717A]'
+        }`}>
           ENGINEERING TOOLKIT & ECOSYSTEM
         </span>
       </div>
@@ -98,10 +104,10 @@ export default function TechMarquee() {
       {/* Edge Gradient Masks */}
       <div className="relative w-full [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
         {/* ROW 1: Moves Left */}
-        <div className="flex overflow-hidden py-3">
+        <div className="flex overflow-hidden py-2 sm:py-3">
           <div
             ref={marquee1Ref}
-            className="flex gap-8 sm:gap-12 shrink-0 animate-marquee hover:[animation-play-state:paused]"
+            className="flex gap-6 sm:gap-10 shrink-0 animate-marquee hover:[animation-play-state:paused]"
             style={{ animation: 'marquee 30s linear infinite' }}
           >
             {[...row1, ...row1, ...row1].map((item, index) => {
@@ -109,10 +115,22 @@ export default function TechMarquee() {
               return (
                 <div
                   key={`r1-${index}`}
-                  className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-[#0D0D0D]/60 border border-white/[0.06] hover:border-[#C6FF3D]/40 hover:bg-[#121212] transition-all duration-300 group cursor-pointer"
+                  className={`flex items-center gap-3 px-4 sm:px-5 py-2.5 sm:py-3 rounded-2xl border transition-all duration-300 group cursor-pointer ${
+                    isCream
+                      ? 'bg-white/80 border-black/5 hover:border-emerald-600 shadow-sm hover:shadow-md'
+                      : 'bg-[#0D0D0D]/60 border-white/[0.06] hover:border-[#C6FF3D]/40 hover:bg-[#121212]'
+                  }`}
                 >
-                  <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-[#71717A] group-hover:text-[#C6FF3D] group-hover:scale-110 transition-all duration-300 group-hover:drop-shadow-[0_0_8px_rgba(198,255,61,0.6)]" />
-                  <span className="font-heading text-xs sm:text-sm font-semibold text-[#A1A1AA] group-hover:text-white transition-colors">
+                  <Icon className={`w-5 h-5 sm:w-6 sm:h-6 transition-all duration-300 group-hover:scale-110 ${
+                    isCream
+                      ? 'text-neutral-500 group-hover:text-emerald-700'
+                      : 'text-[#71717A] group-hover:text-[#C6FF3D] group-hover:drop-shadow-[0_0_8px_rgba(198,255,61,0.6)]'
+                  }`} />
+                  <span className={`font-heading text-xs sm:text-sm font-semibold transition-colors ${
+                    isCream
+                      ? 'text-neutral-700 group-hover:text-black'
+                      : 'text-[#A1A1AA] group-hover:text-white'
+                  }`}>
                     {item.name}
                   </span>
                 </div>
@@ -122,10 +140,10 @@ export default function TechMarquee() {
         </div>
 
         {/* ROW 2: Moves Right */}
-        <div className="flex overflow-hidden py-3">
+        <div className="flex overflow-hidden py-2 sm:py-3">
           <div
             ref={marquee2Ref}
-            className="flex gap-8 sm:gap-12 shrink-0 hover:[animation-play-state:paused]"
+            className="flex gap-6 sm:gap-10 shrink-0 hover:[animation-play-state:paused]"
             style={{ animation: 'marquee-reverse 32s linear infinite' }}
           >
             {[...row2, ...row2, ...row2].map((item, index) => {
@@ -133,10 +151,22 @@ export default function TechMarquee() {
               return (
                 <div
                   key={`r2-${index}`}
-                  className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-[#0D0D0D]/60 border border-white/[0.06] hover:border-[#C6FF3D]/40 hover:bg-[#121212] transition-all duration-300 group cursor-pointer"
+                  className={`flex items-center gap-3 px-4 sm:px-5 py-2.5 sm:py-3 rounded-2xl border transition-all duration-300 group cursor-pointer ${
+                    isCream
+                      ? 'bg-white/80 border-black/5 hover:border-emerald-600 shadow-sm hover:shadow-md'
+                      : 'bg-[#0D0D0D]/60 border-white/[0.06] hover:border-[#C6FF3D]/40 hover:bg-[#121212]'
+                  }`}
                 >
-                  <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-[#71717A] group-hover:text-[#C6FF3D] group-hover:scale-110 transition-all duration-300 group-hover:drop-shadow-[0_0_8px_rgba(198,255,61,0.6)]" />
-                  <span className="font-heading text-xs sm:text-sm font-semibold text-[#A1A1AA] group-hover:text-white transition-colors">
+                  <Icon className={`w-5 h-5 sm:w-6 sm:h-6 transition-all duration-300 group-hover:scale-110 ${
+                    isCream
+                      ? 'text-neutral-500 group-hover:text-emerald-700'
+                      : 'text-[#71717A] group-hover:text-[#C6FF3D] group-hover:drop-shadow-[0_0_8px_rgba(198,255,61,0.6)]'
+                  }`} />
+                  <span className={`font-heading text-xs sm:text-sm font-semibold transition-colors ${
+                    isCream
+                      ? 'text-neutral-700 group-hover:text-black'
+                      : 'text-[#A1A1AA] group-hover:text-white'
+                  }`}>
                     {item.name}
                   </span>
                 </div>

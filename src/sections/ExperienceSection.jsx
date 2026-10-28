@@ -60,9 +60,8 @@ export default function ExperienceSection() {
               return (
                 <div
                   key={index}
-                  className={`relative flex flex-col md:flex-row items-start ${
-                    isEven ? 'md:flex-row-reverse' : ''
-                  }`}
+                  className={`relative flex flex-col md:flex-row items-start ${isEven ? 'md:flex-row-reverse' : ''
+                    }`}
                 >
                   {/* Glowing Node Dot on Center Line */}
                   <div className="absolute left-4 md:left-1/2 top-6 -translate-x-1/2 z-20 flex items-center justify-center">
@@ -80,9 +79,8 @@ export default function ExperienceSection() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, margin: '-60px' }}
                     transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                    className={`w-full md:w-1/2 pl-12 md:pl-0 ${
-                      isEven ? 'md:pr-12' : 'md:pl-12'
-                    }`}
+                    className={`w-full md:w-1/2 pl-12 md:pl-0 ${isEven ? 'md:pr-12' : 'md:pl-12'
+                      }`}
                   >
                     <div className="p-6 sm:p-8 rounded-2xl bg-[#0D0D0D]/90 backdrop-blur-xl border border-white/[0.08] hover:border-[#C6FF3D]/40 transition-all duration-300 group shadow-xl">
                       {/* Period Badge & Location */}
